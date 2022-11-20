@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class GRID {
 
-    private int width;
-    private int height;
+    public int width;
+    public int height;
     private float cellSize;
     private Vector3 originPosition;
     private int[,] gridArray;   //Array multidimensional (2 dimensiones)
     private TextMesh[,] debugTextArray;
-
-  
 
     public GRID(int width, int height, float cellSize, Vector3 originPosition) {
 
@@ -23,20 +21,21 @@ public class GRID {
         gridArray = new int[width, height];
         debugTextArray = new TextMesh[width, height];
 
-        for(int x= 0; x<  gridArray.GetLength(0); x++){
-            for(int y=0; y<gridArray.GetLength(1);y++){
+        for(int x = 0; x < gridArray.GetLength(0); x++)
+        {
+            for(int y = 0; y < gridArray.GetLength(1); y++)
+            {
 
-                debugTextArray[x, y] = CreateWorldText(gridArray[x,y].ToString(),null,GetWorldPosition(x,y) + new Vector3(cellSize,cellSize)* .5f,30,Color.white,TextAnchor.MiddleCenter);
-                Debug.DrawLine(GetWorldPosition(x,y),GetWorldPosition(x,y+1), Color.white, 100f);
-                Debug.DrawLine(GetWorldPosition(x,y),GetWorldPosition(x+1,y),Color.white, 100f);
+                debugTextArray[x, y] = CreateWorldText(gridArray[x, y].ToString(), null, GetWorldPosition(x, y) + new Vector3(cellSize, cellSize) * 0.5f, 30, Color.white, TextAnchor.MiddleCenter);
+                Debug.DrawLine(GetWorldPosition(x, y),GetWorldPosition(x, y+1), Color.white, 100f);
+                Debug.DrawLine(GetWorldPosition(x, y),GetWorldPosition(x+1, y),Color.white, 100f);
             }
-            Debug.DrawLine(GetWorldPosition(width,0),GetWorldPosition(width,height),Color.white, 100f);
-            Debug.DrawLine(GetWorldPosition(0,height),GetWorldPosition(width,height),Color.white, 100f);
+
+            Debug.DrawLine(GetWorldPosition(width, 0), GetWorldPosition(width, height), Color.white, 100f);
+            Debug.DrawLine(GetWorldPosition(0, height), GetWorldPosition(width, height), Color.white, 100f);
 
             //SetValue(2, 1, 56);
-        }   
-
-        
+        }
     }
 
     //Convierte x e y en posiciones del escenario
@@ -44,7 +43,6 @@ public class GRID {
     private Vector3 GetWorldPosition(int x, int y){
 
         return new Vector3(x,y) * cellSize + originPosition;
-
     }
 
     private void GetXY(Vector3 worldPosition, out int x, out int y)
@@ -61,7 +59,6 @@ public class GRID {
             gridArray[x, y] = value;
             debugTextArray[x, y].text = gridArray[x, y].ToString();
         }
-        
     }
 
     //Asigna un valor a dada una posición del mapa
@@ -70,7 +67,6 @@ public class GRID {
         int x, y;
         GetXY(worldPosition, out x, out y);
         SetValue(x, y, value);
-
     }
 
     //Devuelve el valor de una celda
@@ -84,7 +80,6 @@ public class GRID {
         {
             return 0;
         }
-
     }
 
     //Devuelve el valor de una posición en el mapa
@@ -93,13 +88,9 @@ public class GRID {
         int x, y;
         GetXY(worldPosition, out x, out y);
         return GetValue(x, y);
-
     }
-
-    
     
     //Crear texto en el escenario
-
     public static TextMesh CreateWorldText(string text, Transform parent = null, Vector3 localPosition = default(Vector3), int fontSize = 40, Color? color = null, TextAnchor textAnchor = TextAnchor.UpperLeft, TextAlignment textAlignment = TextAlignment.Left, int sortingOrder = 5000) {
         if (color == null) color = Color.white;
         return CreateWorldText(parent, text, localPosition, fontSize, (Color)color, textAnchor, textAlignment, sortingOrder);

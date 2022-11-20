@@ -11,21 +11,8 @@ public class Test : MonoBehaviour
         grid = new GRID(12, 12, 10f, new Vector3 (0, 0));  // width, heigth, cellSize, OriginPosition
 
         //Walls
-        grid.SetValue(Random.Range(3, 9), Random.Range(0, 12), 1);
-        grid.SetValue(Random.Range(3, 9), Random.Range(0, 12), 1);
-        grid.SetValue(Random.Range(3, 9), Random.Range(0, 12), 1);
-        grid.SetValue(Random.Range(3, 9), Random.Range(0, 12), 1);
-        grid.SetValue(Random.Range(3, 9), Random.Range(0, 12), 1);
-        grid.SetValue(Random.Range(3, 9), Random.Range(0, 12), 1);
-        grid.SetValue(Random.Range(3, 9), Random.Range(0, 12), 1);
-        grid.SetValue(Random.Range(3, 9), Random.Range(0, 12), 1);
-        grid.SetValue(Random.Range(3, 9), Random.Range(0, 12), 1);
-        grid.SetValue(Random.Range(3, 9), Random.Range(0, 12), 1);
-        grid.SetValue(Random.Range(3, 9), Random.Range(0, 12), 1);
-        grid.SetValue(Random.Range(3, 9), Random.Range(0, 12), 1);
-        grid.SetValue(Random.Range(3, 9), Random.Range(0, 12), 1);
-        grid.SetValue(Random.Range(3, 9), Random.Range(0, 12), 1);
-        grid.SetValue(Random.Range(3, 9), Random.Range(0, 12), 1);
+        for (int i = 0; i < 21; i++)
+            grid.SetValue(Random.Range(3, 9), Random.Range(0, 12), 1);
 
         //Players
         grid.SetValue(Random.Range(9, 12), Random.Range(0, 5), 2);

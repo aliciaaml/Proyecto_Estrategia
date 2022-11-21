@@ -10,19 +10,23 @@ public class Test : MonoBehaviour
     {
         grid = new GRID(12, 12, 10f, new Vector3 (0, 0));  // width, heigth, cellSize, OriginPosition
 
-        //Walls
-        for (int i = 0; i < 21; i++)
-            grid.SetValue(Random.Range(3, 9), Random.Range(0, 12), 1);
+        //Tall Walls
+        for (int i = 0; i < 6; i++)
+            grid.SetValue(Random.Range(3, 9), Random.Range(0, 12), 5);
+
+        //Short Walls
+        for (int i = 0; i < 6; i++)
+            grid.SetValue(Random.Range(3, 9), Random.Range(0, 12), 7);
 
         //Players
-        grid.SetValue(Random.Range(9, 12), Random.Range(0, 5), 2);
-        grid.SetValue(Random.Range(9, 12), Random.Range(5, 8), 2);
-        grid.SetValue(Random.Range(9, 12), Random.Range(8, 12), 2);
+        grid.SetValue(Random.Range(9, 12), Random.Range(0, 4), 2);
+        grid.SetValue(Random.Range(9, 12), Random.Range(5, 7), 2);
+        grid.SetValue(Random.Range(9, 12), Random.Range(8, 11), 2);
 
         //Enemies
-        grid.SetValue(Random.Range(0, 3), Random.Range(0, 5), 3);
-        grid.SetValue(Random.Range(0, 3), Random.Range(5, 8), 3);
-        grid.SetValue(Random.Range(0, 3), Random.Range(8, 12), 3);
+        grid.SetValue(Random.Range(0, 3), Random.Range(0, 4), 3);
+        grid.SetValue(Random.Range(0, 3), Random.Range(5, 7), 3);
+        grid.SetValue(Random.Range(0, 3), Random.Range(8, 11), 3);
     }
 
     private void Update()

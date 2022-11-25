@@ -4,63 +4,62 @@ using UnityEngine;
 
 public class CharacterPathfinding : MonoBehaviour
 {
-
     public  float speed= 2f;
 
     Vector2 lastClickedPos;
-
     bool moving;
+    List<Vector3> pathVectorList;
+    int currentPathIndex;
 
-    private List<Vector3> pathVectorList;
-    private int currentPathIndex;
 
-
-    public void Update(){
-
+    public void Update()
+    {
        HandleMovement();
-       
     }
 
-    private void HandleMovement(){
-
-        if(pathVectorList!= null){
-
+    private void HandleMovement()
+    {
+        if (pathVectorList != null)
+        {
             Vector3 targetPosition = pathVectorList[currentPathIndex];
-            if(Vector3.Distance(transform.position, targetPosition)>1f){
+
+            if (Vector3.Distance(transform.position, targetPosition) > 1)
+            {
                 Vector3 moveDir = (targetPosition- transform.position).normalized;
 
                 float distanceBefore = Vector3.Distance(transform.position,targetPosition);
-                transform.position = transform.position + moveDir * speed* Time.deltaTime; 
+                transform.position = transform.position + moveDir * speed * Time.deltaTime; 
             }
 
-            else{
-
+            else
+            {
                 currentPathIndex++;
-                if(currentPathIndex >= pathVectorList.Count){
+
+                if (currentPathIndex >= pathVectorList.Count)
+                {
                     StopMoving();
                 }
             }
         }
-   
     }
 
-    private void StopMoving(){
-
+    private void StopMoving()
+    {
         pathVectorList = null;
     }
 
-    public Vector3 GetPosition(){
-
+    public Vector3 GetPosition()
+    {
         return transform.position;
     }
 
-    public void SetTargetPosition(Vector3 targetPosition){
-
+    public void SetTargetPosition(Vector3 targetPosition)
+    {
         currentPathIndex = 0;
-        pathVectorList = Pathfinding.Instance.FindPath(GetPosition(),targetPosition);
+        pathVectorList = Pathfinding.Instance.FindPath(GetPosition(), targetPosition);
 
-        if(pathVectorList!= null && pathVectorList.Count>1){
-
+        if(pathVectorList!= null && pathVectorList.Count > 1)
+        {
             pathVectorList.RemoveAt(0);
         }
     }

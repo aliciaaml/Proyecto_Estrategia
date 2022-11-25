@@ -13,14 +13,12 @@ public class Test : MonoBehaviour
 
     private void Start()
     {
-        pathfinding = new Pathfinding(10,10);
-        stringGrid = new GridManager<StringGridObject>(10,10,10f, Vector3.zero, (GridManager<StringGridObject> g, int x, int y) => new StringGridObject(g, x, y));  // width, heigth, cellSize, OriginPosition
-
+        pathfinding = new Pathfinding(12, 12);
+        stringGrid = new GridManager<StringGridObject>(12, 12, 10f, Vector3.zero, (GridManager<StringGridObject> g, int x, int y) => new StringGridObject(g, x, y));  // width, heigth, cellSize, OriginPosition
     }
 
     private void Update()
     {
-        
         Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         if (Input.GetMouseButtonDown(0))
@@ -55,7 +53,7 @@ public class Test : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Alpha2)) { grid.GetGridObject(worldPosition).AddNumber("2"); }
             if (Input.GetKeyDown(KeyCode.Alpha3)) { grid.GetGridObject(worldPosition).AddNumber("3"); }
             */
-        }
+    }
 
 }
 
@@ -92,6 +90,4 @@ public class StringGridObject
     {
         return letters + "\n" + numbers;
     }
-
-
 }

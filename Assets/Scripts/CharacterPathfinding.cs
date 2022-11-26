@@ -58,7 +58,7 @@ public class CharacterPathfinding : MonoBehaviour
         currentPathIndex = 0;
         pathVectorList = Pathfinding.Instance.FindPath(GetPosition(), targetPosition);
 
-        if(pathVectorList!= null && pathVectorList.Count > 1)
+        if (pathVectorList!= null && pathVectorList.Count > 1)
         {
             pathVectorList.RemoveAt(0);
         }

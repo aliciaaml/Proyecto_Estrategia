@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CharacterPathfinding : MonoBehaviour
 {
-    public  float speed= 2f;
+    public float speed = 5f;
 
     Vector2 lastClickedPos;
     bool moving;

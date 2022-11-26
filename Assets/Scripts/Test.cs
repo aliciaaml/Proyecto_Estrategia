@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-
+    private GridManager<int> intGrid;
     private GridManager<StringGridObject> stringGrid;
     private Pathfinding pathfinding;
 
@@ -15,6 +15,24 @@ public class Test : MonoBehaviour
     {
         pathfinding = new Pathfinding(12, 12);
         stringGrid = new GridManager<StringGridObject>(12, 12, 10f, Vector3.zero, (GridManager<StringGridObject> g, int x, int y) => new StringGridObject(g, x, y));  // width, heigth, cellSize, OriginPosition
+
+        /*Tall Walls
+        for (int i = 0; i < 6; i++)
+            intGrid.SetGridObject(UnityEngine.Random.Range(3, 9), UnityEngine.Random.Range(0, 12), 5);
+
+        //Short Walls
+        for (int i = 0; i < 6; i++)
+            intGrid.SetGridObject(UnityEngine.Random.Range(3, 9), UnityEngine.Random.Range(0, 12), 7);
+
+        //Players
+        intGrid.SetGridObject(UnityEngine.Random.Range(9, 12), UnityEngine.Random.Range(0, 4), 2);
+        intGrid.SetGridObject(UnityEngine.Random.Range(9, 12), UnityEngine.Random.Range(5, 7), 2);
+        intGrid.SetGridObject(UnityEngine.Random.Range(9, 12), UnityEngine.Random.Range(8, 11), 2);
+
+        //Enemies
+        intGrid.SetGridObject(UnityEngine.Random.Range(0, 3), UnityEngine.Random.Range(0, 4), 3);
+        intGrid.SetGridObject(UnityEngine.Random.Range(0, 3), UnityEngine.Random.Range(5, 7), 3);
+        intGrid.SetGridObject(UnityEngine.Random.Range(0, 3), UnityEngine.Random.Range(8, 11), 3);*/
     }
 
     private void Update()
@@ -25,13 +43,14 @@ public class Test : MonoBehaviour
         {
             pathfinding.GetGrid().GetXY(mouseWorldPosition, out int x, out int y);
             List<PathNode> path = pathfinding.FindPath(0, 0, x, y);
+
             if (path != null)
             {
                 Debug.Log("Click");
 
                 for (int i = 0; i < path.Count - 1; i++)
                 {
-                    Debug.DrawLine(new Vector3(path[i].x, path[i].y) * 10f + Vector3.one * 5f, new Vector3(path[i + 1].x, path[i + 1].y) * 10f + Vector3.one * 5f, Color.green,2);
+                    //Debug.DrawLine(new Vector3(path[i].x, path[i].y) * 10f + Vector3.one * 5f, new Vector3(path[i + 1].x, path[i + 1].y) * 10f + Vector3.one * 5f, Color.green,2);
                 }
             }
             characterPathfinding.SetTargetPosition(mouseWorldPosition);
@@ -54,7 +73,6 @@ public class Test : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Alpha3)) { grid.GetGridObject(worldPosition).AddNumber("3"); }
             */
     }
-
 }
 
 public class StringGridObject

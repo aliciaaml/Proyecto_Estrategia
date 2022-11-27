@@ -4,15 +4,50 @@ using UnityEngine;
 
 public class TileMap : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    GridManager<TileMapObject> grid;
+
+    public TileMap(int width, int height, float cellSize, Vector3 originPosition)
     {
-        
+        grid = new GridManager<TileMapObject>(width, height, cellSize, originPosition, (GridManager<TileMapObject> g, int x, int y) => new TileMapObject(grid, x, y));
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SetTileMapSprite(Vector3 worldPosition, TileMapObject.TileMapSprite tileMapSprite)
     {
-        
+        TileMapObject tileMapObject = grid.GetGridObject(worldPosition);
+
+        if (tileMapObject != null)
+            tileMapObject.SetTileMapSprite(tileMapSprite);
+    }
+
+    public class TileMapObject
+    {
+        public enum TileMapSprite
+        {
+            None,
+            Groud
+        }
+
+        GridManager<TileMapObject> grid;
+        int x;
+        int y;
+        TileMapSprite tileMapSprite;
+
+        public TileMapObject(GridManager<TileMapObject> grid, int x, int y)
+        {
+            this.grid = grid;
+            this.x = x;
+            this.y = y;
+        }
+
+        public void SetTileMapSprite(TileMapSprite tileMapSprite)
+        {
+            this.tileMapSprite = tileMapSprite;
+            grid.TriggerGridObjectChanged(x, y);
+        }
+
+        public override string ToString()
+        {
+            return tileMapSprite.ToString();
+        }
     }
 }

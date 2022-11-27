@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CharacterPathfinding : MonoBehaviour
 {
-    public  float speed= 2f;
+    public float speed = 5f;
 
     Vector2 lastClickedPos;
     bool moving;
@@ -35,7 +35,7 @@ public class CharacterPathfinding : MonoBehaviour
             {
                 currentPathIndex++;
 
-                if (currentPathIndex >= pathVectorList.Count)
+                if (currentPathIndex >= 6)
                 {
                     StopMoving();
                 }
@@ -58,7 +58,7 @@ public class CharacterPathfinding : MonoBehaviour
         currentPathIndex = 0;
         pathVectorList = Pathfinding.Instance.FindPath(GetPosition(), targetPosition);
 
-        if(pathVectorList!= null && pathVectorList.Count > 1)
+        if (pathVectorList!= null && pathVectorList.Count > 1)
         {
             pathVectorList.RemoveAt(0);
         }

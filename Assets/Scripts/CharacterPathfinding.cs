@@ -35,7 +35,7 @@ public class CharacterPathfinding : MonoBehaviour
             {
                 currentPathIndex++;
 
-                if (currentPathIndex >= pathVectorList.Count)
+                if (currentPathIndex >= 6)
                 {
                     StopMoving();
                 }

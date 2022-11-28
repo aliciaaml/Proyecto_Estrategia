@@ -50,7 +50,7 @@ public class Test : MonoBehaviour
 
                 for (int i = 0; i < path.Count - 1; i++)
                 {
-                    //Debug.DrawLine(new Vector3(path[i].x, path[i].y) * 10f + Vector3.one * 5f, new Vector3(path[i + 1].x, path[i + 1].y) * 10f + Vector3.one * 5f, Color.green,2);
+                    Debug.DrawLine(new Vector3(path[i].x, path[i].y) * 10f + Vector3.one * 5f, new Vector3(path[i + 1].x, path[i + 1].y) * 10f + Vector3.one * 5f, Color.green,2);
                 }
             }
             characterPathfinding.SetTargetPosition(mouseWorldPosition);
@@ -62,16 +62,6 @@ public class Test : MonoBehaviour
             pathfinding.GetNode(x, y).SetIsWalkeable(!pathfinding.GetNode(x, y).isWalkeable);
             stringGrid.GetGridObject(mouseWorldPosition).AddLetter("X");
         }
-
-
-            /*if (Input.GetKeyDown(KeyCode.A)) { grid.GetGridObject(worldPosition).AddLetter("A"); }
-            if (Input.GetKeyDown(KeyCode.B)) { grid.GetGridObject(worldPosition).AddLetter("B"); }
-            if (Input.GetKeyDown(KeyCode.C)) { grid.GetGridObject(worldPosition).AddLetter("C"); }
-
-            if (Input.GetKeyDown(KeyCode.Alpha1)) { grid.GetGridObject(worldPosition).AddNumber("1"); }
-            if (Input.GetKeyDown(KeyCode.Alpha2)) { grid.GetGridObject(worldPosition).AddNumber("2"); }
-            if (Input.GetKeyDown(KeyCode.Alpha3)) { grid.GetGridObject(worldPosition).AddNumber("3"); }
-            */
     }
 }
 
@@ -82,7 +72,6 @@ public class StringGridObject
     private int y;
 
     private string letters;
-    private string numbers;
 
     public StringGridObject(GridManager<StringGridObject> grid, int x, int y)
     {
@@ -90,7 +79,6 @@ public class StringGridObject
         this.x = x;
         this.y = y;
         letters = "";
-        numbers = "";
     }
 
     public void AddLetter(string letter)
@@ -98,14 +86,9 @@ public class StringGridObject
         letters += letter;
         grid.TriggerGridObjectChanged(x, y);
     }
-    public void AddNumber(string number)
-    {
-        numbers += number;
-        grid.TriggerGridObjectChanged(x, y);
-    }
 
     public override string ToString()
     {
-        return letters + "\n" + numbers;
+        return letters;
     }
 }

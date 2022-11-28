@@ -5,11 +5,13 @@ using UnityEngine;
 public class Bullet : MonoBehaviour
 {
     private Vector3 shootDir;
+    private int damage;
 
-    
+
     public void SetUp(Vector3 shootDir)
     {
         this.shootDir = shootDir;
+        damage = 20;
 
         //En caso de poner un sprite y querer cambiar su orientacion:
         //////////////
@@ -33,17 +35,21 @@ public class Bullet : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.tag == "Enemy")
+        
+        if (collision.gameObject.tag == "TallWall")
         {
-            collision.gameObject.GetComponent<EnemyHealth>().TakeDamage(10);
             Destroy(gameObject);
         }
-        
-        //HACER CON TAGS COMO EL ANTERIOR IF:
-        //Si se encuentra un muro alto se destruye
-        //Si encuentra muro bajo quita - vida y destruye bala
-        
 
-        
+        if (collision.gameObject.tag == "SmallWall")
+        {
+            damage = 10;
+        }
+
+        if (collision.gameObject.tag == "Enemy")
+        {
+            collision.gameObject.GetComponent<EnemyHealth>().TakeDamage(damage);
+            Destroy(gameObject);
+        }
     }
 }

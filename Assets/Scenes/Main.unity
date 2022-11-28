@@ -1937,6 +1937,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f72bde26269fe745ba1c5479b5616f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_TWall: {fileID: 1363108326892833955, guid: 4c15dc07031d2074296dfa9a5e7d97fc, type: 3}
+  m_SWall: {fileID: 7485682400079419059, guid: fabd7cb60de5ac54cb781cee3b286370, type: 3}
   characterPathfinding: {fileID: 1689632803}
 --- !u!4 &695385786
 Transform:

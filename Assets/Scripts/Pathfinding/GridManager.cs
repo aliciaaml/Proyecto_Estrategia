@@ -46,6 +46,8 @@ public class GridManager<TGridObject>
                 for (int y = 0; y < gridArray.GetLength(1); y++)
                 {
                     //debugTextArray[x, y] = CreateWorldText(gridArray[x,y]?.ToString(),null,GetWorldPosition(x,y) + new Vector3(cellSize,cellSize)* .5f,30,Color.white,TextAnchor.MiddleCenter);
+
+                    debugTextArray[x, y] = CreateWorldText("",null,GetWorldPosition(x,y) + new Vector3(cellSize,cellSize)* .5f,30,Color.white,TextAnchor.MiddleCenter);
                     Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x, y + 1), Color.white, 100f);
                     Debug.DrawLine(GetWorldPosition(x, y), GetWorldPosition(x + 1, y), Color.white, 100f);
                 }
@@ -76,12 +78,13 @@ public class GridManager<TGridObject>
         return cellSize;
     }
 
-    //Convierte x e y en posiciones del escenario   
-    private Vector3 GetWorldPosition(int x, int y){
+    //Convierte x e y de una celda en posiciones del escenario   
+    public Vector3 GetWorldPosition(int x, int y){
 
         return new Vector3(x,y) * cellSize + originPosition;
     }
 
+    //Convierte posiciones del escenario en x e y de una celda
     public void GetXY(Vector3 worldPosition, out int x, out int y)
     {
         x = Mathf.FloorToInt((worldPosition - originPosition).x / cellSize);

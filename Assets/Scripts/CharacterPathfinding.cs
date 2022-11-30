@@ -9,9 +9,18 @@ public class CharacterPathfinding : MonoBehaviour
     Vector2 lastClickedPos;
     bool moving;
     List<Vector3> pathVectorList;
+    Pathfinding pathfinding;
     int currentPathIndex;
+    public List<PathNode> range = new List<PathNode>();
 
+    void Start()
+    {
+        pathfinding = Pathfinding.Instance;
 
+        pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
+        range = pathfinding.GetRangeList(pathfinding.GetNode(x, y));
+
+    }
     public void Update()
     {
        HandleMovement();
@@ -35,9 +44,11 @@ public class CharacterPathfinding : MonoBehaviour
             {
                 currentPathIndex++;
 
-                if (currentPathIndex >= 6)
+                if (currentPathIndex >= pathVectorList.Count)
                 {
                     StopMoving();
+                    pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
+                    range = pathfinding.GetRangeList(pathfinding.GetNode(x, y));
                 }
             }
         }
@@ -46,6 +57,11 @@ public class CharacterPathfinding : MonoBehaviour
     private void StopMoving()
     {
         pathVectorList = null;
+        
+        foreach (PathNode node in range)
+        {
+            pathfinding.GetNode(node.x, node.y).SetIsInRange(false);
+        }
     }
 
     public Vector3 GetPosition()
@@ -56,7 +72,13 @@ public class CharacterPathfinding : MonoBehaviour
     public void SetTargetPosition(Vector3 targetPosition)
     {
         currentPathIndex = 0;
-        pathVectorList = Pathfinding.Instance.FindPath(GetPosition(), targetPosition);
+
+        foreach (PathNode node in range)
+        {
+            pathfinding.GetNode(node.x, node.y).SetIsInRange(true);
+        }
+
+        pathVectorList = pathfinding.FindPath(GetPosition(), targetPosition);
 
         if (pathVectorList!= null && pathVectorList.Count > 1)
         {

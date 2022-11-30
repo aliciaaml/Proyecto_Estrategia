@@ -12,9 +12,15 @@ public class ButtonsManager : MonoBehaviour
 
     private bool enabledShoot;
 
+    Pathfinding pathfinding;
+    [SerializeField] private CharacterPathfinding characterPathfinding;
+
     private void Start()
     {
         enabledShoot = false;
+
+        pathfinding = Pathfinding.Instance;
+        
     }
 
     private void Update()
@@ -26,16 +32,23 @@ public class ButtonsManager : MonoBehaviour
             //Hacer que seleccione un targetposition
             //Para eso necesito añadir variables a los nodos y mirar en este si hay enemigos
             Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            pathfinding.GetGrid().GetXY(mouseWorldPosition, out int x, out int y);
 
             if (Input.GetKeyDown(KeyCode.Space))  //Space de momento, pero bloquear movimiento y usar raton
             {
-                GameObject bulletInstance = Instantiate(m_Bullet, m_Shooter.position, Quaternion.identity) as GameObject;
-                Vector3 shootDir = (mouseWorldPosition - bulletInstance.transform.position).normalized;
-                bulletInstance.GetComponent<Bullet>().SetUp(shootDir); 
-                enabledShoot = false;
+                
+                if (characterPathfinding.range.Contains(pathfinding.GetNode(x, y))){
+                    GameObject bulletInstance = Instantiate(m_Bullet, m_Shooter.position, Quaternion.identity) as GameObject;
+                    Vector3 shootDir = (mouseWorldPosition - bulletInstance.transform.position).normalized;
+                    bulletInstance.GetComponent<Bullet>().SetUp(shootDir); 
+                    enabledShoot = false;
 
-                //Para no desbloquear el boton despues del disparo, comentar:
-                shootButton.interactable = true;
+                    //Para no desbloquear el boton despues del disparo, comentar:
+                    shootButton.interactable = true;
+                }
+                
+
+                
             }  
         }
     }

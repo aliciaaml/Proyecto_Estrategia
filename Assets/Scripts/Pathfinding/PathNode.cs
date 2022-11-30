@@ -13,8 +13,9 @@ public class PathNode
     public int fCost;
 
     public bool isWalkeable;
+    public bool isInRange;
     public bool isEnemy;
-    public bool isTeam;
+    public bool isFriend;
     public bool isTWall;
     public bool isSWall;
 
@@ -28,8 +29,9 @@ public class PathNode
         this.x = x;
         this.y = y;
         isWalkeable = true;
+        isInRange = false;
         isEnemy = false;
-        isTeam = false;
+        isFriend = false;
         isTWall = false;
         isSWall = false;
         isHiding = false;
@@ -43,6 +45,12 @@ public class PathNode
     public void SetIsWalkeable(bool isWalkeable)
     {
         this.isWalkeable = isWalkeable;
+        grid.TriggerGridObjectChanged(x, y);
+    }
+
+    public void SetIsInRange(bool isInRange)
+    {
+        this.isInRange = isInRange;
         grid.TriggerGridObjectChanged(x, y);
     }
 

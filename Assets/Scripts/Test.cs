@@ -9,6 +9,8 @@ public class Test : MonoBehaviour
     private GridManager<StringGridObject> stringGrid;
     private Pathfinding pathfinding;
 
+    public GameObject m_Character1;
+    public GameObject m_Enemy1;
     public GameObject m_TWall;
     public GameObject m_SWall;
     private List<PathNode> wallList;
@@ -20,6 +22,12 @@ public class Test : MonoBehaviour
         pathfinding = new Pathfinding(12, 12);
         stringGrid = new GridManager<StringGridObject>(12, 12, 10f, Vector3.zero, (GridManager<StringGridObject> g, int x, int y) => new StringGridObject(g, x, y));  // width, heigth, cellSize, OriginPosition
         wallList = new List<PathNode>();
+
+        //Vector3 localPost1 = pathfinding.GetGrid().GetWorldPosition(2, 2) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+        //GameObject Character1Instance = Instantiate(m_Character1, localPost1, Quaternion.identity) as GameObject;
+
+        //Vector3 localPost2 = pathfinding.GetGrid().GetWorldPosition(5, 5) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+        //GameObject Enemy1Instance = Instantiate(m_Enemy1, localPost2, Quaternion.identity) as GameObject;
 
         /*Tall Walls
         for (int i = 0; i < 6; i++)
@@ -47,16 +55,19 @@ public class Test : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             pathfinding.GetGrid().GetXY(mouseWorldPosition, out int x, out int y);
-            List<PathNode> path = pathfinding.FindPath(0, 0, x, y);
 
-            if (path != null)
-            {
+            
+
+            //List<PathNode> path = pathfinding.FindPath(0, 0, x, y);
+
+            //if (path != null)
+            //{
                 
-                for (int i = 0; i < path.Count - 1; i++)
-                {
+                //for (int i = 0; i < path.Count - 1; i++)
+                //{
                     //Debug.DrawLine(new Vector3(path[i].x, path[i].y) * 10f + Vector3.one * 5f, new Vector3(path[i + 1].x, path[i + 1].y) * 10f + Vector3.one * 5f, Color.green,2);
-                }
-            }
+                //}
+            //}
             characterPathfinding.SetTargetPosition(mouseWorldPosition);
         }
 

@@ -13,13 +13,14 @@ public class PathNode
     public int fCost;
 
     public bool isWalkeable;
+    public bool isInRange;
     public bool isEnemy;
-    public bool isTeam;
+    public bool isFriend;
     public bool isTWall;
     public bool isSWall;
+    public bool isHalfHiding;
+    public bool isFullHiding;
 
-    //Plantear fullhiding y half hidding;
-    public bool isHiding;
     public PathNode cameFromNode;
 
     public PathNode(GridManager<PathNode> grid, int x, int y)
@@ -27,18 +28,22 @@ public class PathNode
         this.grid = grid;
         this.x = x;
         this.y = y;
+        
         isWalkeable = true;
+        isInRange = false;
         isEnemy = false;
-        isTeam = false;
+        isFriend = false;
         isTWall = false;
         isSWall = false;
-        isHiding = false;
-}
+        isHalfHiding = false;
+        isFullHiding = false;
+    }
 
     public void CalculateFCost()
     {
         fCost = gCost + hCost;
     }
+
 
     public void SetIsWalkeable(bool isWalkeable)
     {
@@ -46,6 +51,23 @@ public class PathNode
         grid.TriggerGridObjectChanged(x, y);
     }
 
+    public void SetIsInRange(bool isInRange)
+    {
+        this.isInRange = isInRange;
+        grid.TriggerGridObjectChanged(x, y);
+    }
+
+    public void SetIsFriend(bool isFriend)
+    {
+        this.isFriend = isFriend;
+        grid.TriggerGridObjectChanged(x, y);
+    }
+
+    public void SetIsEnemy(bool isEnemy)
+    {
+        this.isEnemy = isEnemy;
+        grid.TriggerGridObjectChanged(x, y);
+    }
 
     public void SetIsTallWall(bool isTWall)
     {
@@ -59,11 +81,18 @@ public class PathNode
         grid.TriggerGridObjectChanged(x, y);
     }
 
-    public void SetIsHiding(bool isHiding)
+    public void SetIsHalfHiding(bool isHalfHiding)
     {
-        this.isHiding = isHiding;
+        this.isHalfHiding = isHalfHiding;
         grid.TriggerGridObjectChanged(x, y);
     }
+
+    public void SetIsFullHiding(bool isFullHiding)
+    {
+        this.isFullHiding = isFullHiding;
+        grid.TriggerGridObjectChanged(x, y);
+    }
+
 
     public override string ToString()
     {

@@ -85,7 +85,7 @@ public class Pathfinding
             {
                 if (closedList.Contains(neighbourNode)) continue;
 
-                if (!neighbourNode.isWalkeable)
+                if (!neighbourNode.isWalkeable || !neighbourNode.isInRange)
                 {
                     closedList.Add(neighbourNode);
                     continue;
@@ -140,6 +140,105 @@ public class Pathfinding
         if (currentNode.y + 1 < grid.GetHeigth()) neighbourList.Add(GetNode(currentNode.x, currentNode.y + 1));
 
         return neighbourList;
+    }
+
+    public List<PathNode> GetRangeList(PathNode currentNode)
+    {
+        List<PathNode> rangeList = new List<PathNode>();
+
+        //LEFT
+        if (currentNode.x - 1 >= 0)
+        {
+            rangeList.Add(GetNode(currentNode.x - 1, currentNode.y));
+            if (currentNode.y - 1 >= 0) rangeList.Add(GetNode(currentNode.x - 1, currentNode.y - 1));
+            if (currentNode.y + 1 < grid.GetHeigth()) rangeList.Add(GetNode(currentNode.x - 1, currentNode.y + 1));
+        }
+
+        if (currentNode.x - 2 >= 0)
+        {
+            rangeList.Add(GetNode(currentNode.x - 2, currentNode.y));
+            if (currentNode.y - 1 >= 0) rangeList.Add(GetNode(currentNode.x - 2, currentNode.y - 1));
+            if (currentNode.y - 2 >= 0) rangeList.Add(GetNode(currentNode.x - 2, currentNode.y - 2));
+            if (currentNode.y + 1 < grid.GetHeigth()) rangeList.Add(GetNode(currentNode.x - 2, currentNode.y + 1));
+            if (currentNode.y + 2 < grid.GetHeigth()) rangeList.Add(GetNode(currentNode.x - 2, currentNode.y + 2));
+        }
+
+        if (currentNode.x - 3 >= 0)
+        {
+            rangeList.Add(GetNode(currentNode.x - 3, currentNode.y));
+            if (currentNode.y - 1 >= 0) rangeList.Add(GetNode(currentNode.x - 3, currentNode.y - 1));
+            if (currentNode.y - 2 >= 0) rangeList.Add(GetNode(currentNode.x - 3, currentNode.y - 2));
+            if (currentNode.y - 3 >= 0) rangeList.Add(GetNode(currentNode.x - 3, currentNode.y - 3));
+            if (currentNode.y + 1 < grid.GetHeigth()) rangeList.Add(GetNode(currentNode.x - 3, currentNode.y + 1));
+            if (currentNode.y + 2 < grid.GetHeigth()) rangeList.Add(GetNode(currentNode.x - 3, currentNode.y + 2));
+            if (currentNode.y + 3 < grid.GetHeigth()) rangeList.Add(GetNode(currentNode.x - 3, currentNode.y + 3));
+        }
+
+        //RIGHT
+        if (currentNode.x + 1 < grid.GetWidth())
+        {
+            rangeList.Add(GetNode(currentNode.x + 1, currentNode.y));
+            if (currentNode.y - 1 >= 0) rangeList.Add(GetNode(currentNode.x + 1, currentNode.y - 1));
+            if (currentNode.y + 1 < grid.GetHeigth()) rangeList.Add(GetNode(currentNode.x + 1, currentNode.y + 1));
+        }
+
+        if (currentNode.x + 2 < grid.GetWidth())
+        {
+            rangeList.Add(GetNode(currentNode.x + 2, currentNode.y));
+            if (currentNode.y - 1 >= 0) rangeList.Add(GetNode(currentNode.x + 2, currentNode.y - 1));
+            if (currentNode.y - 2 >= 0) rangeList.Add(GetNode(currentNode.x + 2, currentNode.y - 2));
+            if (currentNode.y + 1 < grid.GetHeigth()) rangeList.Add(GetNode(currentNode.x + 2, currentNode.y + 1));
+            if (currentNode.y + 2 < grid.GetHeigth()) rangeList.Add(GetNode(currentNode.x + 2, currentNode.y + 2));
+        }
+
+        if (currentNode.x + 3 < grid.GetWidth())
+        {
+            rangeList.Add(GetNode(currentNode.x + 3, currentNode.y));
+            if (currentNode.y - 1 >= 0) rangeList.Add(GetNode(currentNode.x + 3, currentNode.y - 1));
+            if (currentNode.y - 2 >= 0) rangeList.Add(GetNode(currentNode.x + 3, currentNode.y - 2));
+            if (currentNode.y - 3 >= 0) rangeList.Add(GetNode(currentNode.x + 3, currentNode.y - 3));
+            if (currentNode.y + 1 < grid.GetHeigth()) rangeList.Add(GetNode(currentNode.x + 3, currentNode.y + 1));
+            if (currentNode.y + 2 < grid.GetHeigth()) rangeList.Add(GetNode(currentNode.x + 3, currentNode.y + 2));
+            if (currentNode.y + 3 < grid.GetHeigth()) rangeList.Add(GetNode(currentNode.x + 3, currentNode.y + 3));
+        }
+
+        //DOWN
+        if (currentNode.y - 1 >= 0) rangeList.Add(GetNode(currentNode.x, currentNode.y - 1));
+        if (currentNode.y - 2 >= 0)
+        {
+            rangeList.Add(GetNode(currentNode.x, currentNode.y - 2));
+            if (currentNode.x - 1 >= 0) rangeList.Add(GetNode(currentNode.x - 1, currentNode.y - 2));
+            if (currentNode.x + 1 < grid.GetHeigth()) rangeList.Add(GetNode(currentNode.x + 1, currentNode.y - 2));
+        }
+
+        if (currentNode.y - 3 >= 0)
+        {
+            rangeList.Add(GetNode(currentNode.x, currentNode.y - 3));
+            if (currentNode.x - 1 >= 0) rangeList.Add(GetNode(currentNode.x - 1, currentNode.y - 3));
+            if (currentNode.x - 2 >= 0) rangeList.Add(GetNode(currentNode.x - 2, currentNode.y - 3));
+            if (currentNode.x + 1 < grid.GetHeigth()) rangeList.Add(GetNode(currentNode.x + 1, currentNode.y - 3));
+            if (currentNode.x + 2 < grid.GetHeigth()) rangeList.Add(GetNode(currentNode.x + 2, currentNode.y - 3));
+        }
+
+        //UP
+        if (currentNode.y + 1 < grid.GetHeigth()) rangeList.Add(GetNode(currentNode.x, currentNode.y + 1));
+        if (currentNode.y + 2 >= 0)
+        {
+            rangeList.Add(GetNode(currentNode.x, currentNode.y + 2));
+            if (currentNode.x - 1 >= 0) rangeList.Add(GetNode(currentNode.x - 1, currentNode.y + 2));
+            if (currentNode.x + 1 < grid.GetHeigth()) rangeList.Add(GetNode(currentNode.x + 1, currentNode.y + 2));
+        }
+
+        if (currentNode.y + 3 >= 0)
+        {
+            rangeList.Add(GetNode(currentNode.x, currentNode.y + 3));
+            if (currentNode.x - 1 >= 0) rangeList.Add(GetNode(currentNode.x - 1, currentNode.y + 3));
+            if (currentNode.x - 2 >= 0) rangeList.Add(GetNode(currentNode.x - 2, currentNode.y + 3));
+            if (currentNode.x + 1 < grid.GetHeigth()) rangeList.Add(GetNode(currentNode.x + 1, currentNode.y + 3));
+            if (currentNode.x + 2 < grid.GetHeigth()) rangeList.Add(GetNode(currentNode.x + 2, currentNode.y + 3));
+        }
+
+        return rangeList;
     }
 
     public PathNode GetNode(int x, int y)

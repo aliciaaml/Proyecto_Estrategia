@@ -6,11 +6,13 @@ using UnityEngine.UI;
 public class ButtonsManager : MonoBehaviour
 {
     public Button shootButton;
+    public Button moveButton;
     public GameObject m_Bullet;          
     public Transform m_Shooter;
-    public Transform targetPosition;
+    //public Transform targetPosition;
 
-    private bool enabledShoot;
+    public static bool enabledShoot;
+    public static bool enabledMove;
 
     Pathfinding pathfinding;
     [SerializeField] private CharacterPathfinding characterPathfinding;
@@ -25,18 +27,15 @@ public class ButtonsManager : MonoBehaviour
 
     private void Update()
     {
-        
-        
+
         if (enabledShoot)
         {
-            //Hacer que seleccione un targetposition
-            //Para eso necesito añadir variables a los nodos y mirar en este si hay enemigos
-            Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            pathfinding.GetGrid().GetXY(mouseWorldPosition, out int x, out int y);
 
-            if (Input.GetKeyDown(KeyCode.Space))  //Space de momento, pero bloquear movimiento y usar raton
+            if (Input.GetMouseButtonDown(0))  //Space de momento, pero bloquear movimiento y usar raton
             {
-                
+                Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                pathfinding.GetGrid().GetXY(mouseWorldPosition, out int x, out int y);
+
                 if (characterPathfinding.range.Contains(pathfinding.GetNode(x, y))){
                     GameObject bulletInstance = Instantiate(m_Bullet, m_Shooter.position, Quaternion.identity) as GameObject;
                     Vector3 shootDir = (mouseWorldPosition - bulletInstance.transform.position).normalized;
@@ -44,33 +43,40 @@ public class ButtonsManager : MonoBehaviour
                     enabledShoot = false;
 
                     //Para no desbloquear el boton despues del disparo, comentar:
-                    shootButton.interactable = true;
+                    //shootButton.interactable = true;
                 }
                 
 
                 
             }  
         }
+
+        if (enabledMove)
+        {
+            
+            if (Input.GetMouseButtonDown(0))
+            {
+                Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                characterPathfinding.SetTargetPosition(mouseWorldPosition);
+                
+            }
+        }
     }
 
     public void Fire()
     {
-        
-        enabledShoot = true;   //Falta por bloquear el movimiento
+        enabledMove = false;
 
-        //Para bloquear el boton de disparar una vez pulsado:
+
+        enabledShoot = true;
         shootButton.interactable = false;
     }
 
     public void Move()
     {
+        enabledShoot = false;
 
-    }
-
-
-    //En caso de diferenciar el movedel hit:
-    public void Hit()
-    {
-
+        enabledMove = true;
+        moveButton.interactable = false;
     }
 }

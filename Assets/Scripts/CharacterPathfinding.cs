@@ -5,25 +5,23 @@ using UnityEngine;
 public class CharacterPathfinding : MonoBehaviour
 {
     public float speed = 5f;
-
-    Vector2 lastClickedPos;
-    bool moving;
-    List<Vector3> pathVectorList;
     Pathfinding pathfinding;
+    List<Vector3> pathVectorList;
     int currentPathIndex;
     public List<PathNode> range = new List<PathNode>();
+    //Vector2 lastClickedPos;
+    //bool moving;
 
     void Start()
     {
         pathfinding = Pathfinding.Instance;
-
         pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
         range = pathfinding.GetRangeList(pathfinding.GetNode(x, y));
 
     }
     public void Update()
     {
-       HandleMovement();
+        HandleMovement();
     }
 
     private void HandleMovement()
@@ -47,8 +45,6 @@ public class CharacterPathfinding : MonoBehaviour
                 if (currentPathIndex >= pathVectorList.Count)
                 {
                     StopMoving();
-                    pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
-                    range = pathfinding.GetRangeList(pathfinding.GetNode(x, y));
                 }
             }
         }
@@ -57,11 +53,14 @@ public class CharacterPathfinding : MonoBehaviour
     private void StopMoving()
     {
         pathVectorList = null;
-        
+
         foreach (PathNode node in range)
         {
             pathfinding.GetNode(node.x, node.y).SetIsInRange(false);
         }
+
+        pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
+        range = pathfinding.GetRangeList(pathfinding.GetNode(x, y));
     }
 
     public Vector3 GetPosition()
@@ -82,7 +81,16 @@ public class CharacterPathfinding : MonoBehaviour
 
         if (pathVectorList!= null && pathVectorList.Count > 1)
         {
+            ButtonsManager.enabledMove = false;
             pathVectorList.RemoveAt(0);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            ButtonsManager.enabledMove = true;
         }
     }
 }

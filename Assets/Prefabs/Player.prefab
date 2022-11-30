@@ -334,7 +334,7 @@ BoxCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.0011367053, y: 0.56555426}
+  m_Offset: {x: -0.005713612, y: 0.59759223}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0.44615385}
     pivot: {x: 0.5, y: 0.1}
@@ -345,7 +345,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.4155757, y: 0.41275516}
+  m_Size: {x: 0.69934124, y: 0.9345174}
   m_EdgeRadius: 0
 --- !u!114 &7524734756256026248
 MonoBehaviour:
@@ -360,9 +360,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shootButton: {fileID: 0}
+  moveButton: {fileID: 0}
   m_Bullet: {fileID: 5399131062309883495, guid: ec23d436510ded04899f614823e2a9f2, type: 3}
   m_Shooter: {fileID: 7524734756256026247}
-  targetPosition: {fileID: 0}
+  characterPathfinding: {fileID: 0}
 --- !u!1 &8224013174344106456
 GameObject:
   m_ObjectHideFlags: 0

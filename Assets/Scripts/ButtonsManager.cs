@@ -58,7 +58,9 @@ public class ButtonsManager : MonoBehaviour
             {
                 Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 characterPathfinding.SetTargetPosition(mouseWorldPosition);
-                
+
+                //Para no desbloquear el boton despues del disparo, comentar:
+                //moveButton.interactable = true;
             }
         }
     }
@@ -66,7 +68,6 @@ public class ButtonsManager : MonoBehaviour
     public void Fire()
     {
         enabledMove = false;
-
 
         enabledShoot = true;
         shootButton.interactable = false;

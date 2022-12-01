@@ -10,6 +10,8 @@ public class EnemyPathfinding : MonoBehaviour
     int currentPathIndex;
     public List<PathNode> range = new List<PathNode>();
 
+    bool enemyTurn = true;
+
     //Vector2 lastClickedPos;
     //bool moving;
 
@@ -19,15 +21,14 @@ public class EnemyPathfinding : MonoBehaviour
         pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
         pathfinding.GetNode(x, y).SetIsEnemy(true);
         range = pathfinding.GetRangeList(pathfinding.GetNode(x, y));
-
     }
 
-    /*public void Update()
+    public void Update()
     {
-        HandleMovement();
-    }*/
+        HandleMovement(); 
+    }
 
-    /*private void HandleMovement()
+    private void HandleMovement()
     {
         if (pathVectorList != null)
         {
@@ -65,14 +66,14 @@ public class EnemyPathfinding : MonoBehaviour
         pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
         pathfinding.GetNode(x, y).SetIsEnemy(true);
         range = pathfinding.GetRangeList(pathfinding.GetNode(x, y));
-    }*/
+    }
 
     public Vector3 GetPosition()
     {
         return transform.position;
     }
 
-    /*public void SetTargetPosition(Vector3 targetPosition)
+    public void SetTargetPosition(Vector3 targetPosition)
     {
         currentPathIndex = 0;
 
@@ -92,7 +93,7 @@ public class EnemyPathfinding : MonoBehaviour
             pathVectorList.RemoveAt(0);
         }
     }
-
+    /*
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player") || other.CompareTag("Enemy"))

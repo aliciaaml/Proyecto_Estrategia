@@ -7,7 +7,7 @@ public class Test : MonoBehaviour
 {
     private GridManager<int> intGrid;
     private GridManager<StringGridObject> stringGrid;
-    private Pathfinding pathfinding;
+    public static Pathfinding pathfinding;
 
     public GameObject m_Character1;
     public GameObject m_Enemy1;
@@ -16,7 +16,7 @@ public class Test : MonoBehaviour
     private List<PathNode> tallWallList;
     private List<PathNode> smallWallList;
 
-    [SerializeField] private CharacterPathfinding characterPathfinding;
+    public CharacterPathfinding characterPathfinding;
 
     private void Start()
     {
@@ -24,6 +24,38 @@ public class Test : MonoBehaviour
         stringGrid = new GridManager<StringGridObject>(12, 12, 10f, Vector3.zero, (GridManager<StringGridObject> g, int x, int y) => new StringGridObject(g, x, y));  // width, heigth, cellSize, OriginPosition
         tallWallList = new List<PathNode>();
         smallWallList = new List<PathNode>();
+
+        pathfinding.GetNode(2,2).SetIsFriend(true);
+        stringGrid.GetGridObject(2,2).AddLetter("F");
+
+        //Tall walls
+        pathfinding.GetNode(0, 2).SetIsWalkeable(!pathfinding.GetNode(0, 2).isWalkeable);
+        pathfinding.GetNode(0, 2).SetIsTallWall(true);
+        pathfinding.GetNode(0, 2).SetIsFullHiding(false);
+        pathfinding.GetNode(0, 2).SetIsHalfHiding(false);
+        stringGrid.GetGridObject(0, 2).AddLetter("TW");
+        Vector3 localPost = pathfinding.GetGrid().GetWorldPosition(0, 2) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+        GameObject tWallInstance = Instantiate(m_TWall, localPost, Quaternion.identity) as GameObject;
+        tallWallList.Add(pathfinding.GetNode(0, 2));
+
+        foreach (PathNode wall in tallWallList)
+        {
+            List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(wall.x, wall.y));
+            foreach (PathNode neighbourNode in neighbours)
+            {
+                if (pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isTWall || pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isSWall)
+                {
+                    pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(false);
+                    pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(false);
+                }
+
+                else
+                {
+                    pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(true);
+                    stringGrid.GetGridObject(neighbourNode.x, neighbourNode.y).AddLetter("FH");
+                }
+            }
+        }
 
         //Vector3 localPost1 = pathfinding.GetGrid().GetWorldPosition(2, 2) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
         //GameObject Character1Instance = Instantiate(m_Character1, localPost1, Quaternion.identity) as GameObject;
@@ -70,7 +102,27 @@ public class Test : MonoBehaviour
             characterPathfinding.SetTargetPosition(mouseWorldPosition);
         }*/
 
+        
+        //if (Input.GetKey(KeyCode.F))
+        //{
+        //    Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //    pathfinding.GetGrid().GetXY(mouseWorldPosition, out int x, out int y);
 
+        //    pathfinding.GetNode(x, y).SetIsFriend(true);
+        //    stringGrid.GetGridObject(x, y).AddLetter("F");
+
+        //}
+
+        
+        //if (Input.GetKey(KeyCode.E))
+        //{
+        //    Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //    pathfinding.GetGrid().GetXY(mouseWorldPosition, out int x, out int y);
+
+        //    pathfinding.GetNode(x, y).SetIsEnemy(true);
+        //    stringGrid.GetGridObject(x, y).AddLetter("E");
+
+        //}
 
         if (Input.GetMouseButtonDown(1))
         {

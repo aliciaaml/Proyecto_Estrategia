@@ -15,7 +15,7 @@ public class ButtonsManager : MonoBehaviour
     public static bool enabledMove;
 
     Pathfinding pathfinding;
-    [SerializeField] private CharacterPathfinding characterPathfinding;
+    public CharacterPathfinding characterPathfinding;
 
     private void Start()
     {

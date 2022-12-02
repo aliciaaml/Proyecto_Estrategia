@@ -29,7 +29,7 @@ public class Pathfinding
         grid.GetXY(endWorldPosition, out int endX, out int endY);
 
         List<PathNode> path = FindPath(startX, startY, endX, endY);
-        if(path == null)
+        if (path == null)
         {
             return null;
         }

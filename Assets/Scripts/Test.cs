@@ -28,6 +28,9 @@ public class Test : MonoBehaviour
         pathfinding.GetNode(2,2).SetIsFriend(true);
         stringGrid.GetGridObject(2,2).AddLetter("F");
 
+        pathfinding.GetNode(4, 4).SetIsEnemy(true);
+        stringGrid.GetGridObject(4, 4).AddLetter("E");
+
         //Tall walls
         pathfinding.GetNode(0, 2).SetIsWalkeable(!pathfinding.GetNode(0, 2).isWalkeable);
         pathfinding.GetNode(0, 2).SetIsTallWall(true);

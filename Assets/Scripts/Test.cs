@@ -25,11 +25,11 @@ public class Test : MonoBehaviour
         tallWallList = new List<PathNode>();
         smallWallList = new List<PathNode>();
 
-        pathfinding.GetNode(2,2).SetIsFriend(true);
-        stringGrid.GetGridObject(2,2).AddLetter("F");
+        pathfinding.GetNode(5, 5).SetIsFriend(true);
+        stringGrid.GetGridObject(5, 5).AddLetter("F");
 
-        pathfinding.GetNode(4, 4).SetIsEnemy(true);
-        stringGrid.GetGridObject(4, 4).AddLetter("E");
+        pathfinding.GetNode(3, 3).SetIsEnemy(true);
+        stringGrid.GetGridObject(3, 3).AddLetter("E");
 
         //Tall walls
         pathfinding.GetNode(0, 2).SetIsWalkeable(!pathfinding.GetNode(0, 2).isWalkeable);

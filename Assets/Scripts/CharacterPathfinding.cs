@@ -182,6 +182,7 @@ public class CharacterPathfinding : MonoBehaviour
     {
         range = pathfinding.GetRangeList(pathfinding.GetNode(nodoActual.x, nodoActual.y));
         PathNode closestPlayer = null;
+        PathNode closestEnemy = null;
         int minDist = 1000;
         //enemyTurn = false;
 
@@ -194,11 +195,19 @@ public class CharacterPathfinding : MonoBehaviour
                     closestPlayer = node;
                 }
             }
-         
+
+            else if (pathfinding.GetNode(node.x, node.y).isEnemy) //Hay IA en rango?
+            {
+                if (pathfinding.CalculateDistanceCost(node, nodoActual) < minDist)
+                {
+                    closestEnemy = node;
+                }
+            }
         }
 
         if (closestPlayer != null) //Hay jugador en rango
         {
+            Debug.Log("player in range");
             SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y));
 
             List<PathNode> playerRange = pathfinding.GetRangeList(pathfinding.GetNode(closestPlayer.x, closestPlayer.y));
@@ -217,17 +226,6 @@ public class CharacterPathfinding : MonoBehaviour
                 //SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y), pathfinding.GetGrid().GetWorldPosition(choosenHide.x, choosenHide.y));
                 //SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y));
 
-                if (nodoActual.x == closestPlayer.x && nodoActual.y == closestPlayer.y)
-                {
-                    Debug.Log("Se cubre");
-                    SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(choosenHide.x, choosenHide.y));
-                }
-
-                Debug.Log("actual x" + nodoActual.x);
-                Debug.Log("actual y" + nodoActual.y);
-                Debug.Log("closestPlayer x" + closestPlayer.x);
-                Debug.Log("closestPlayer y" + closestPlayer.y);
-
                 //pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y); //mis x e y
 
                 //while (pathfinding.GetNode(x, y) != pathfinding.GetNode(choosenHide.x, choosenHide.y))
@@ -242,20 +240,42 @@ public class CharacterPathfinding : MonoBehaviour
 
             else //No llega a muro desde player
             {
-                foreach (PathNode node in playerRange)
+                /*foreach (PathNode node in playerRange)
                 {
                     if (pathfinding.GetNode(node.x, node.y).isEnemy)
                     {
                         SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(node.x, node.y));
                     }
-                }
+                }*/
             }
-                
         }
 
-        else //No hay jugador en rango
+        /*else //No hay jugador en rango
         {
 
+        }*/
+
+        else if (closestEnemy != null) //Hay IA en rango
+        {
+            Debug.Log("IA in range");
+            SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(closestEnemy.x, closestEnemy.y));
+
+            List<PathNode> playerRange = pathfinding.GetRangeList(pathfinding.GetNode(closestEnemy.x, closestEnemy.y));
+            PathNode choosenHide = null;
+
+            foreach (PathNode node in playerRange)
+            {
+                if (pathfinding.GetNode(node.x, node.y).isFullHiding || pathfinding.GetNode(node.x, node.y).isHalfHiding)
+                {
+                    choosenHide = node;
+                }
+            }
+
+            if (choosenHide != null)
+            {
+                if (nodoActual.x == closestEnemy.x && nodoActual.y == closestEnemy.y)
+                    SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(choosenHide.x, choosenHide.y));
+            }
         }
     }
 }

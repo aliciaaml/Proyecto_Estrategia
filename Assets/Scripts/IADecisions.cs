@@ -39,7 +39,7 @@ public class IADecisions : MonoBehaviour
 
         foreach (PathNode node in range)
         {
-            if (pathfinding.GetNode(node.x, node.y).isFriend) //Ver si hay algún jugador dentro del rango
+            if (pathfinding.GetNode(node.x, node.y).isFriend) //Ver si hay algun jugador dentro del rango
             {
                 Debug.Log("Hay jugador");
             }

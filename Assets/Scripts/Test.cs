@@ -15,6 +15,9 @@ public class Test : MonoBehaviour
     public GameObject m_SWall;
     private List<PathNode> tallWallList;
     private List<PathNode> smallWallList;
+    public GameObject character;
+
+    public static bool saltado = false;
 
     public CharacterPathfinding characterPathfinding;
 
@@ -24,12 +27,14 @@ public class Test : MonoBehaviour
         stringGrid = new GridManager<StringGridObject>(12, 12, 10f, Vector3.zero, (GridManager<StringGridObject> g, int x, int y) => new StringGridObject(g, x, y));  // width, heigth, cellSize, OriginPosition
         tallWallList = new List<PathNode>();
         smallWallList = new List<PathNode>();
+    
 
         pathfinding.GetNode(5, 5).SetIsFriend(true);
         stringGrid.GetGridObject(5, 5).AddLetter("F");
 
         pathfinding.GetNode(3, 3).SetIsEnemy(true);
         stringGrid.GetGridObject(3, 3).AddLetter("E");
+ 
 
         //Tall walls
         pathfinding.GetNode(0, 2).SetIsWalkeable(!pathfinding.GetNode(0, 2).isWalkeable);
@@ -60,6 +65,8 @@ public class Test : MonoBehaviour
             }
         }
 
+        
+
         //Vector3 localPost1 = pathfinding.GetGrid().GetWorldPosition(2, 2) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
         //GameObject Character1Instance = Instantiate(m_Character1, localPost1, Quaternion.identity) as GameObject;
 
@@ -87,8 +94,25 @@ public class Test : MonoBehaviour
         intGrid.SetGridObject(UnityEngine.Random.Range(0, 3), UnityEngine.Random.Range(8, 11), 3);*/
     }
 
+
     private void Update()
     {
+
+        //COMPRAVAMOS SI LA IA A SALTADO YA A ALGUN ENEMIGO
+
+        if(CharacterPathfinding.enemyTurn){
+
+            pathfinding.GetGrid().GetXY(character.transform.position, out int x, out int y);
+
+            if(pathfinding.GetNode(x, y).isEnemy){
+
+                saltado = true;
+            }
+
+            
+        }
+
+       
         /*if (Input.GetMouseButtonDown(0))
         {
             Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -253,7 +277,13 @@ public class Test : MonoBehaviour
             }
         }
     }
+
+    public Vector3 GetPosition()
+    {
+        return transform.position;
+    }
 }
+
 
 public class StringGridObject
 {
@@ -281,4 +311,5 @@ public class StringGridObject
     {
         return letters;
     }
+
 }

@@ -26,9 +26,12 @@ public class CharacterPathfinding : MonoBehaviour
     }
     public void Update()
     {
+        
+
         if (enemyTurn)
         {
             pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
+            Debug.Log(pathfinding.GetNode(x, y));
             TakeDecisions(pathfinding.GetNode(x, y));
             //enemyTurn = false;
         }
@@ -188,11 +191,18 @@ public class CharacterPathfinding : MonoBehaviour
 
         foreach (PathNode node in range)
         {
+
             if (pathfinding.GetNode(node.x, node.y).isFriend) //Hay jugador en rango?
             {
                 if (pathfinding.CalculateDistanceCost(node, nodoActual) < minDist)
                 {
                     closestPlayer = node;
+
+                    if(Test.saltado)
+                        pathfinding.GetNode(node.x,node.y).SetIsEnemy(false);         //Si la IA ya ha había saltado a un jugador no lo vuelve a saltar
+                    
+                    
+                    //HandleMovement();  // Cuando la IA se quede en una casilla de jugador y no hay muros cerca, ni otro jugador se mueve aleatoriamente el rango máximo
                 }
             }
 
@@ -200,9 +210,15 @@ public class CharacterPathfinding : MonoBehaviour
             {
                 if (pathfinding.CalculateDistanceCost(node, nodoActual) < minDist)
                 {
-                    closestEnemy = node;
+                    if(!Test.saltado){
+
+                        closestEnemy = node;
+                    }
+                       
                 }
             }
+
+        
         }
 
         if (closestPlayer != null) //Hay jugador en rango

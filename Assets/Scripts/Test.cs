@@ -29,11 +29,11 @@ public class Test : MonoBehaviour
         smallWallList = new List<PathNode>();
     
 
-        pathfinding.GetNode(5, 5).SetIsFriend(true);
-        stringGrid.GetGridObject(5, 5).AddLetter("F");
+        pathfinding.GetNode(3, 3).SetIsFriend(true);
+        stringGrid.GetGridObject(3, 3).AddLetter("F");
 
-        pathfinding.GetNode(3, 3).SetIsEnemy(true);
-        stringGrid.GetGridObject(3, 3).AddLetter("E");
+        pathfinding.GetNode(2, 2).SetIsEnemy(true);
+        stringGrid.GetGridObject(2, 2).AddLetter("E");
  
 
         //Tall walls
@@ -45,6 +45,15 @@ public class Test : MonoBehaviour
         Vector3 localPost = pathfinding.GetGrid().GetWorldPosition(0, 2) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
         GameObject tWallInstance = Instantiate(m_TWall, localPost, Quaternion.identity) as GameObject;
         tallWallList.Add(pathfinding.GetNode(0, 2));
+
+        pathfinding.GetNode(8, 8).SetIsWalkeable(!pathfinding.GetNode(0, 2).isWalkeable);
+        pathfinding.GetNode(8, 8).SetIsTallWall(true);
+        pathfinding.GetNode(8, 8).SetIsFullHiding(false);
+        pathfinding.GetNode(8, 8).SetIsHalfHiding(false);
+        stringGrid.GetGridObject(8, 8).AddLetter("TW");
+        Vector3 localPost2 = pathfinding.GetGrid().GetWorldPosition(8, 8) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+        GameObject tWallInstance2 = Instantiate(m_TWall, localPost, Quaternion.identity) as GameObject;
+        tallWallList.Add(pathfinding.GetNode(8, 8));
 
         foreach (PathNode wall in tallWallList)
         {
@@ -97,19 +106,16 @@ public class Test : MonoBehaviour
 
     private void Update()
     {
+        //COMPROBAMOS SI LA IA HA SALTADO YA A ALGÚN ENEMIGO
 
-        //COMPRAVAMOS SI LA IA A SALTADO YA A ALGUN ENEMIGO
-
-        if(CharacterPathfinding.enemyTurn){
-
+        if (CharacterPathfinding.enemyTurn)
+        {
             pathfinding.GetGrid().GetXY(character.transform.position, out int x, out int y);
 
-            if(pathfinding.GetNode(x, y).isEnemy){
-
+            if (pathfinding.GetNode(x, y).isEnemy)
+            {
                 saltado = true;
             }
-
-            
         }
 
        
@@ -161,6 +167,7 @@ public class Test : MonoBehaviour
             if (!pathfinding.GetNode(x, y).isWalkeable)
             {
                 var i = UnityEngine.Random.Range(0,2);
+
                 if(i == 0)
                 {
                 
@@ -174,6 +181,7 @@ public class Test : MonoBehaviour
 
 
                 }
+
                 else
                 {
                     pathfinding.GetNode(x, y).SetIsSmallWall(true);
@@ -212,6 +220,7 @@ public class Test : MonoBehaviour
                         }
                     }
                 }
+
                 else if (pathfinding.GetNode(x, y).isSWall)
                 {
                     stringGrid.GetGridObject(x, y).AddLetter("");
@@ -235,8 +244,6 @@ public class Test : MonoBehaviour
                     }
                 }
             }
-            
-
 
             foreach (PathNode wall in tallWallList)
             {

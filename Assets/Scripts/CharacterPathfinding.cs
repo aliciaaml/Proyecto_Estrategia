@@ -26,8 +26,6 @@ public class CharacterPathfinding : MonoBehaviour
     }
     public void Update()
     {
-        
-
         if (enemyTurn)
         {
             pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
@@ -47,7 +45,7 @@ public class CharacterPathfinding : MonoBehaviour
 
             if (Vector3.Distance(transform.position, targetPosition) > 1)
             {
-                Vector3 moveDir = (targetPosition- transform.position).normalized;
+                Vector3 moveDir = (targetPosition - transform.position).normalized;
 
                 float distanceBefore = Vector3.Distance(transform.position,targetPosition);
                 transform.position = transform.position + moveDir * speed * Time.deltaTime; 
@@ -99,7 +97,6 @@ public class CharacterPathfinding : MonoBehaviour
 
     private void StopMoving()
     {
-
         //secondPathVectorList = null;
         pathVectorList = null;
 
@@ -191,16 +188,14 @@ public class CharacterPathfinding : MonoBehaviour
 
         foreach (PathNode node in range)
         {
-
             if (pathfinding.GetNode(node.x, node.y).isFriend) //Hay jugador en rango?
             {
                 if (pathfinding.CalculateDistanceCost(node, nodoActual) < minDist)
                 {
                     closestPlayer = node;
 
-                    if(Test.saltado)
-                        pathfinding.GetNode(node.x,node.y).SetIsEnemy(false);         //Si la IA ya ha había saltado a un jugador no lo vuelve a saltar
-                    
+                    if (Test.saltado)
+                        pathfinding.GetNode(node.x,node.y).SetIsEnemy(false);//Si la IA ya ha había saltado a un jugador no lo vuelve a saltar
                     
                     //HandleMovement();  // Cuando la IA se quede en una casilla de jugador y no hay muros cerca, ni otro jugador se mueve aleatoriamente el rango máximo
                 }
@@ -210,20 +205,19 @@ public class CharacterPathfinding : MonoBehaviour
             {
                 if (pathfinding.CalculateDistanceCost(node, nodoActual) < minDist)
                 {
-                    if(!Test.saltado){
-
+                    if (!Test.saltado)
+                    {
                         closestEnemy = node;
                     }
-                       
                 }
             }
-
-        
         }
 
         if (closestPlayer != null) //Hay jugador en rango
         {
             Debug.Log("player in range");
+            Debug.Log(nodoActual.x);
+            Debug.Log(nodoActual.y);
             SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y));
 
             List<PathNode> playerRange = pathfinding.GetRangeList(pathfinding.GetNode(closestPlayer.x, closestPlayer.y));
@@ -239,8 +233,13 @@ public class CharacterPathfinding : MonoBehaviour
 
             if (choosenHide != null) //Desde player llego a muro
             {
+                Debug.Log("Llega a muro");
                 //SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y), pathfinding.GetGrid().GetWorldPosition(choosenHide.x, choosenHide.y));
-                //SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y));
+                if (nodoActual.x + 1 == closestPlayer.x && nodoActual.y + 1 == closestPlayer.y)
+                {
+                    Debug.Log("Misma posición que player");
+                    SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(choosenHide.x, choosenHide.y));
+                }
 
                 //pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y); //mis x e y
 
@@ -287,10 +286,15 @@ public class CharacterPathfinding : MonoBehaviour
                 }
             }
 
-            if (choosenHide != null)
+            if (choosenHide != null) //Tiene muro cerca
             {
                 if (nodoActual.x == closestEnemy.x && nodoActual.y == closestEnemy.y)
                     SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(choosenHide.x, choosenHide.y));
+            }
+
+            else
+            {
+
             }
         }
     }

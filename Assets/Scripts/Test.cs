@@ -117,14 +117,14 @@ public class Test : MonoBehaviour
 
 
         //Tall walls
-        pathfinding.GetNode(0, 2).SetIsWalkeable(false);
-        pathfinding.GetNode(0, 2).SetIsTallWall(true);
-        pathfinding.GetNode(0, 2).SetIsFullHiding(false);
-        pathfinding.GetNode(0, 2).SetIsHalfHiding(false);
-        stringGrid.GetGridObject(0, 2).AddLetter("TW");
-        Vector3 localPost = pathfinding.GetGrid().GetWorldPosition(0, 2) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+        pathfinding.GetNode(0, 6).SetIsWalkeable(false);
+        pathfinding.GetNode(0, 6).SetIsTallWall(true);
+        pathfinding.GetNode(0, 6).SetIsFullHiding(false);
+        pathfinding.GetNode(0, 6).SetIsHalfHiding(false);
+        stringGrid.GetGridObject(0, 6).AddLetter("TW");
+        Vector3 localPost = pathfinding.GetGrid().GetWorldPosition(0, 6) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
         GameObject tWallInstance = Instantiate(m_TWall, localPost, Quaternion.identity) as GameObject;
-        tallWallList.Add(pathfinding.GetNode(0, 2));
+        tallWallList.Add(pathfinding.GetNode(0, 6));
 
         pathfinding.GetNode(8, 8).SetIsWalkeable(false);
         pathfinding.GetNode(8, 8).SetIsTallWall(true);
@@ -186,7 +186,7 @@ public class Test : MonoBehaviour
 
     private void Update()
     {
-        //COMPROBAMOS SI LA IA HA SALTADO YA A ALGÚN ENEMIGO
+        //COMPROBAMOS SI LA IA HA SALTADO YA A ALGï¿½N ENEMIGO
 
         if (IATurn)
         {

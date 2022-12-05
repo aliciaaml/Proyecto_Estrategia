@@ -26,7 +26,7 @@ public class EnemyPathfinding : MonoBehaviour
         if (Test.IATurn)
         {
             pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
-            Debug.Log(pathfinding.GetNode(x, y));
+            //Debug.Log(pathfinding.GetNode(x, y));
             TakeDecisions(pathfinding.GetNode(x, y));
             //enemyTurn = false;
         }
@@ -179,19 +179,22 @@ public class EnemyPathfinding : MonoBehaviour
         {
             if (pathfinding.GetNode(node.x, node.y).isPlayer) //Hay jugador en rango?
             {
+
+                Debug.Log("PLAYER EN RANGOOO");
                 if (pathfinding.CalculateDistanceCost(node, nodoActual) < minDist)
                 {
                     closestPlayer = node;
 
                     if (Test.saltado)
-                        pathfinding.GetNode(node.x, node.y).SetIsIA(false);//Si la IA ya ha había saltado a un jugador no lo vuelve a saltar
+                        pathfinding.GetNode(node.x, node.y).SetIsIA(false);//Si la IA ya ha habï¿½a saltado a un jugador no lo vuelve a saltar
 
-                    //HandleMovement();  // Cuando la IA se quede en una casilla de jugador y no hay muros cerca, ni otro jugador se mueve aleatoriamente el rango máximo
+                    //HandleMovement();  // Cuando la IA se quede en una casilla de jugador y no hay muros cerca, ni otro jugador se mueve aleatoriamente el rango mï¿½ximo
                 }
             }
 
             else if (pathfinding.GetNode(node.x, node.y).isIA) //Hay IA en rango?
             {
+                Debug.Log("IA EN RANGOOO");
                 if (pathfinding.CalculateDistanceCost(node, nodoActual) < minDist)
                 {
                     if (!Test.saltado)
@@ -202,11 +205,12 @@ public class EnemyPathfinding : MonoBehaviour
             }
         }
 
+        
         if (closestPlayer != null) //Hay jugador en rango
         {
             Debug.Log("player in range");
-            Debug.Log(nodoActual.x);
-            Debug.Log(nodoActual.y);
+            //Debug.Log(nodoActual.x);
+            //Debug.Log(nodoActual.y);
             SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y));
 
             List<PathNode> playerRange = pathfinding.GetRangeList(pathfinding.GetNode(closestPlayer.x, closestPlayer.y));
@@ -220,13 +224,14 @@ public class EnemyPathfinding : MonoBehaviour
                 }
             }
 
+            /*
             if (choosenHide != null) //Desde player llego a muro
             {
                 Debug.Log("Llega a muro");
                 //SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y), pathfinding.GetGrid().GetWorldPosition(choosenHide.x, choosenHide.y));
                 if (nodoActual.x + 1 == closestPlayer.x && nodoActual.y + 1 == closestPlayer.y)
                 {
-                    Debug.Log("Misma posición que player");
+                    Debug.Log("Misma posiciï¿½n que player");
                     SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(choosenHide.x, choosenHide.y));
                 }
 
@@ -244,22 +249,24 @@ public class EnemyPathfinding : MonoBehaviour
 
             else //No llega a muro desde player
             {
-                /*foreach (PathNode node in playerRange)
+                foreach (PathNode node in playerRange)
                 {
-                    if (pathfinding.GetNode(node.x, node.y).isEnemy)
+                    if (pathfinding.GetNode(node.x, node.y).isIA)
                     {
                         SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(node.x, node.y));
                     }
-                }*/
-            }
-        }
+                }
+            }*/
 
+            
+        }
+        
         /*else //No hay jugador en rango
         {
 
         }*/
 
-        else if (closestIA != null) //Hay IA en rango
+        if (closestIA != null) //Hay IA en rango        //else
         {
             Debug.Log("IA in range");
             SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y));

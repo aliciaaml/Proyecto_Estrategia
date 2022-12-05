@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class IADecisions : MonoBehaviour
 {
-    private Pathfinding pathfinding;
+    Pathfinding pathfinding;
     public static bool enemyTurn = true;
     public List<PathNode> range = new List<PathNode>();
     public CharacterPathfinding enemyPathfinding;
@@ -12,7 +12,7 @@ public class IADecisions : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        pathfinding = enemyPathfinding.pathfinding;
+        //pathfinding = enemyPathfinding.pathfinding;
 
     }
 
@@ -39,7 +39,7 @@ public class IADecisions : MonoBehaviour
 
         foreach (PathNode node in range)
         {
-            if (pathfinding.GetNode(node.x, node.y).isFriend) //Ver si hay algun jugador dentro del rango
+            if (pathfinding.GetNode(node.x, node.y).isPlayer) //Ver si hay algun jugador dentro del rango
             {
                 Debug.Log("Hay jugador");
             }

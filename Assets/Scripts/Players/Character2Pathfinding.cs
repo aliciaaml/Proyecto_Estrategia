@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyPathfinding : MonoBehaviour
+public class Character2Pathfinding : MonoBehaviour
 {
     public float speed = 15f;
     Pathfinding pathfinding;
@@ -10,22 +10,17 @@ public class EnemyPathfinding : MonoBehaviour
     int currentPathIndex;
     public List<PathNode> range = new List<PathNode>();
 
-    bool enemyTurn = true;
-
-    //Vector2 lastClickedPos;
-    //bool moving;
-
     void Start()
     {
         pathfinding = Pathfinding.Instance;
         pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
-        pathfinding.GetNode(x, y).SetIsEnemy(true);
+        pathfinding.GetNode(x, y).SetIsPlayer(true);
         range = pathfinding.GetRangeList(pathfinding.GetNode(x, y));
-    }
 
+    }
     public void Update()
     {
-        HandleMovement(); 
+        HandleMovement();
     }
 
     private void HandleMovement()
@@ -38,7 +33,7 @@ public class EnemyPathfinding : MonoBehaviour
             {
                 Vector3 moveDir = (targetPosition - transform.position).normalized;
 
-                float distanceBefore = Vector3.Distance(transform.position, targetPosition);
+                //float distanceBefore = Vector3.Distance(transform.position, targetPosition);
                 transform.position = transform.position + moveDir * speed * Time.deltaTime;
             }
 
@@ -54,6 +49,7 @@ public class EnemyPathfinding : MonoBehaviour
         }
     }
 
+
     private void StopMoving()
     {
         pathVectorList = null;
@@ -64,7 +60,13 @@ public class EnemyPathfinding : MonoBehaviour
         }
 
         pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
-        pathfinding.GetNode(x, y).SetIsEnemy(true);
+
+        if (pathfinding.GetNode(x, y).isPlayer || pathfinding.GetNode(x, y).isIA)
+        {
+            ButtonsManager.enabledMove = true;
+        }
+
+        pathfinding.GetNode(x, y).SetIsPlayer(true);
         range = pathfinding.GetRangeList(pathfinding.GetNode(x, y));
     }
 
@@ -83,7 +85,7 @@ public class EnemyPathfinding : MonoBehaviour
         }
 
         pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
-        pathfinding.GetNode(x, y).SetIsEnemy(false);
+        pathfinding.GetNode(x, y).SetIsPlayer(false);
 
         pathVectorList = pathfinding.FindPath(GetPosition(), targetPosition);
 
@@ -93,12 +95,4 @@ public class EnemyPathfinding : MonoBehaviour
             pathVectorList.RemoveAt(0);
         }
     }
-    /*
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player") || other.CompareTag("Enemy"))
-        {
-            ButtonsManager.enabledMove = true;
-        }
-    }*/
 }

@@ -2541,14 +2541,14 @@ PrefabInstance:
     - target: {fileID: 6051218447760328081, guid: 1e79b152207460a419f680f01ff41a48, type: 3}
       propertyPath: character2Pathfinding
       value: 
-      objectReference: {fileID: 1578101000}
+      objectReference: {fileID: 1578101002}
     - target: {fileID: 6051218447760328089, guid: 1e79b152207460a419f680f01ff41a48, type: 3}
       propertyPath: m_Name
       value: Player2
       objectReference: {fileID: 0}
     - target: {fileID: 6051218447760328091, guid: 1e79b152207460a419f680f01ff41a48, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6051218447760328094, guid: 1e79b152207460a419f680f01ff41a48, type: 3}
       propertyPath: m_RootOrder
@@ -2616,12 +2616,25 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1578100999}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9baa71d8e2fddeb4aaf200e172fec0d2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 15
+  pathVectorList: []
+  currentPathIndex: 0
+--- !u!114 &1578101002 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6051218447760328091, guid: 1e79b152207460a419f680f01ff41a48, type: 3}
+  m_PrefabInstance: {fileID: 1578100998}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1578100999}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 115611d29679cc048ab75f5a8861453d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1676303221
 GameObject:
   m_ObjectHideFlags: 0
@@ -2788,7 +2801,7 @@ PrefabInstance:
     - target: {fileID: 6051218447760328081, guid: 1e79b152207460a419f680f01ff41a48, type: 3}
       propertyPath: character2Pathfinding
       value: 
-      objectReference: {fileID: 1578101000}
+      objectReference: {fileID: 1578101002}
     - target: {fileID: 6051218447760328089, guid: 1e79b152207460a419f680f01ff41a48, type: 3}
       propertyPath: m_Name
       value: Player

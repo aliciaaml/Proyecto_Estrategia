@@ -7,7 +7,7 @@ public class Test : MonoBehaviour
 {
     private GridManager<StringGridObject> stringGrid;  //Solo para escribir las letras en las celdas
     public static Pathfinding pathfinding;
-    public static bool enemyTurn;
+    public static bool IATurn;
     public static int playerTurn;
 
     //public GameObject m_Character1;
@@ -16,7 +16,7 @@ public class Test : MonoBehaviour
     public GameObject m_SWall;
     private List<PathNode> tallWallList;
     private List<PathNode> smallWallList;
-    public GameObject enemy;
+    public GameObject IACharacter;
 
     public static bool saltado = false;
 
@@ -27,7 +27,7 @@ public class Test : MonoBehaviour
         pathfinding = new Pathfinding(12, 12);
         stringGrid = new GridManager<StringGridObject>(12, 12, 10f, Vector3.zero, (GridManager<StringGridObject> g, int x, int y) => new StringGridObject(g, x, y));  // width, heigth, cellSize, OriginPosition
 
-        enemyTurn = true;
+        IATurn = true;
         playerTurn = 1;
         
         tallWallList = new List<PathNode>();
@@ -188,9 +188,9 @@ public class Test : MonoBehaviour
     {
         //COMPROBAMOS SI LA IA HA SALTADO YA A ALGÚN ENEMIGO
 
-        if (enemyTurn)
+        if (IATurn)
         {
-            pathfinding.GetGrid().GetXY(enemy.transform.position, out int x, out int y);
+            pathfinding.GetGrid().GetXY(IACharacter.transform.position, out int x, out int y);
 
             if (pathfinding.GetNode(x, y).isIA)
             {

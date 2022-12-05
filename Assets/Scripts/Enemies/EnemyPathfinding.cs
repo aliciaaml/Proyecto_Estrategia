@@ -23,7 +23,7 @@ public class EnemyPathfinding : MonoBehaviour
     }
     public void Update()
     {
-        if (Test.enemyTurn)
+        if (Test.IATurn)
         {
             pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
             Debug.Log(pathfinding.GetNode(x, y));
@@ -44,7 +44,7 @@ public class EnemyPathfinding : MonoBehaviour
             {
                 Vector3 moveDir = (targetPosition - transform.position).normalized;
 
-                float distanceBefore = Vector3.Distance(transform.position, targetPosition);
+                //float distanceBefore = Vector3.Distance(transform.position, targetPosition);
                 transform.position = transform.position + moveDir * speed * Time.deltaTime;
             }
 

@@ -15,7 +15,7 @@ public class ButtonsManager : MonoBehaviour
 
     Pathfinding pathfinding;
     public CharacterPathfinding characterPathfinding;
-    public Character2Pathfinding character2Pathfinding;
+    public CharacterPathfinding character2Pathfinding;
 
     private void Start()
     {
@@ -28,7 +28,7 @@ public class ButtonsManager : MonoBehaviour
 
     private void Update()
     {
-        if (Test.enemyTurn)
+        if (Test.IATurn)
         {
             shootButton.interactable = false;
             moveButton.interactable = false;

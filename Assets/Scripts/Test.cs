@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-    private GridManager<StringGridObject> stringGrid;  //Solo para escribir las letras en las celdas
+    public static GridManager<StringGridObject> stringGrid;  //Solo para escribir las letras en las celdas
     public static Pathfinding pathfinding;
     public static bool IATurn;
     public static int playerTurn;
@@ -14,7 +14,8 @@ public class Test : MonoBehaviour
     //public GameObject m_Enemy1;
     public GameObject m_TWall;
     public GameObject m_SWall;
-    private List<PathNode> tallWallList;
+    public GameObject ammo;
+    public static List<PathNode> tallWallList;
     private List<PathNode> smallWallList;
     public GameObject IACharacter;
 
@@ -27,13 +28,13 @@ public class Test : MonoBehaviour
         pathfinding = new Pathfinding(12, 12);
         stringGrid = new GridManager<StringGridObject>(12, 12, 10f, Vector3.zero, (GridManager<StringGridObject> g, int x, int y) => new StringGridObject(g, x, y));  // width, heigth, cellSize, OriginPosition
 
-        IATurn = true;
+        IATurn = false;
         playerTurn = 1;
         
         tallWallList = new List<PathNode>();
         smallWallList = new List<PathNode>();
 
-        //SOAWN DE MUROS ALEATORIO
+        //SPAWN DE MUROS ALEATORIO
         /////////////////////////////////////////////////////
 
         //for (int x = 0; x < pathfinding.GetGrid().GetWidth(); x++)
@@ -402,5 +403,4 @@ public class StringGridObject
     {
         return letters;
     }
-
 }

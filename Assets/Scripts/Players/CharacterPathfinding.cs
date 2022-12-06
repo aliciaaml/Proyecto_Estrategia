@@ -9,6 +9,10 @@ public class CharacterPathfinding : MonoBehaviour
     List<Vector3> pathVectorList;
     int currentPathIndex;
     public List<PathNode> range = new List<PathNode>();
+    public GameObject bulletAmmo;
+
+    public static int totalWalls = 3;
+    public static int totalBullets = 3;
 
     void Start()
     {
@@ -16,8 +20,8 @@ public class CharacterPathfinding : MonoBehaviour
         pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
         pathfinding.GetNode(x, y).SetIsPlayer(true);
         range = pathfinding.GetRangeList(pathfinding.GetNode(x, y));
-
     }
+
     public void Update()
     {
         HandleMovement();
@@ -48,7 +52,6 @@ public class CharacterPathfinding : MonoBehaviour
             }
         }
     }
-
 
     private void StopMoving()
     {
@@ -93,6 +96,15 @@ public class CharacterPathfinding : MonoBehaviour
         {
             ButtonsManager.enabledMove = false;
             pathVectorList.RemoveAt(0);
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Ammo"))
+        {
+            totalBullets++;
+            Destroy(bulletAmmo);
         }
     }
 }

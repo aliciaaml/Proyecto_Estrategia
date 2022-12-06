@@ -463,7 +463,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 455184929}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1689632809}
+        m_TargetAssemblyTypeName: ButtonsManager, Assembly-CSharp
+        m_MethodName: PassTurn
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &455184929
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2273,6 +2285,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_TWall: {fileID: 1363108326892833955, guid: 4c15dc07031d2074296dfa9a5e7d97fc, type: 3}
   m_SWall: {fileID: 7485682400079419059, guid: fabd7cb60de5ac54cb781cee3b286370, type: 3}
+  m_Ammo: {fileID: 235092146634076742, guid: b1773469994dc284a8282e84b2920ebf, type: 3}
   IACharacter: {fileID: 503125341}
   enemyPathfinding: {fileID: 7030499732456855588}
 --- !u!4 &695385786
@@ -2748,6 +2761,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 6051218447760328081, guid: 1e79b152207460a419f680f01ff41a48, type: 3}
+      propertyPath: m_TWall
+      value: 
+      objectReference: {fileID: 1363108326892833955, guid: 4c15dc07031d2074296dfa9a5e7d97fc, type: 3}
+    - target: {fileID: 6051218447760328081, guid: 1e79b152207460a419f680f01ff41a48, type: 3}
       propertyPath: m_Bullet
       value: 
       objectReference: {fileID: 5399131062309883495, guid: ec23d436510ded04899f614823e2a9f2, type: 3}
@@ -2755,6 +2772,10 @@ PrefabInstance:
       propertyPath: moveButton
       value: 
       objectReference: {fileID: 1513009859}
+    - target: {fileID: 6051218447760328081, guid: 1e79b152207460a419f680f01ff41a48, type: 3}
+      propertyPath: passButton
+      value: 
+      objectReference: {fileID: 455184928}
     - target: {fileID: 6051218447760328081, guid: 1e79b152207460a419f680f01ff41a48, type: 3}
       propertyPath: wallButton
       value: 
@@ -3087,6 +3108,10 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 6051218447760328081, guid: 1e79b152207460a419f680f01ff41a48, type: 3}
+      propertyPath: m_TWall
+      value: 
+      objectReference: {fileID: 1363108326892833955, guid: 4c15dc07031d2074296dfa9a5e7d97fc, type: 3}
+    - target: {fileID: 6051218447760328081, guid: 1e79b152207460a419f680f01ff41a48, type: 3}
       propertyPath: m_Bullet
       value: 
       objectReference: {fileID: 5399131062309883495, guid: ec23d436510ded04899f614823e2a9f2, type: 3}
@@ -3094,6 +3119,10 @@ PrefabInstance:
       propertyPath: moveButton
       value: 
       objectReference: {fileID: 1513009859}
+    - target: {fileID: 6051218447760328081, guid: 1e79b152207460a419f680f01ff41a48, type: 3}
+      propertyPath: passButton
+      value: 
+      objectReference: {fileID: 455184928}
     - target: {fileID: 6051218447760328081, guid: 1e79b152207460a419f680f01ff41a48, type: 3}
       propertyPath: wallButton
       value: 
@@ -3121,7 +3150,7 @@ PrefabInstance:
     - target: {fileID: 6051218447760328091, guid: 1e79b152207460a419f680f01ff41a48, type: 3}
       propertyPath: bulletAmmo
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 235092146634076742, guid: b1773469994dc284a8282e84b2920ebf, type: 3}
     - target: {fileID: 6051218447760328094, guid: 1e79b152207460a419f680f01ff41a48, type: 3}
       propertyPath: m_RootOrder
       value: 1

@@ -480,6 +480,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 15
+  bulletAmmo: {fileID: 235092146634076742, guid: b1773469994dc284a8282e84b2920ebf, type: 3}
 --- !u!114 &6051218447760328081
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -494,6 +495,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shootButton: {fileID: 0}
   moveButton: {fileID: 0}
+  wallButton: {fileID: 0}
+  passButton: {fileID: 0}
   m_Bullet: {fileID: 5399131062309883495, guid: ec23d436510ded04899f614823e2a9f2, type: 3}
+  m_TWall: {fileID: 0}
+  totalBulletsText: {fileID: 0}
+  totalWallsText: {fileID: 0}
   characterPathfinding: {fileID: 6051218447760328091}
   character2Pathfinding: {fileID: 0}

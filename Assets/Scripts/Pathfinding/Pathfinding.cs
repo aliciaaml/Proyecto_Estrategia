@@ -142,6 +142,48 @@ public class Pathfinding
         return neighbourList;
     }
 
+    public List<PathNode> GetNeighbourListAmmo(PathNode currentNode)
+    {
+        List<PathNode> neighbourList = new List<PathNode>();
+        int i = Random.Range(0, 8);
+
+        if (currentNode.x - 1 >= 0)
+        {
+            //Left
+            if (i == 0)
+                neighbourList.Add(GetNode(currentNode.x - 1, currentNode.y));
+            //Left Down
+            if (i == 1)
+                if (currentNode.y - 1 >= 0) neighbourList.Add(GetNode(currentNode.x - 1, currentNode.y - 1));
+            //Left Up
+            if (i == 2)
+                if (currentNode.y + 1 < grid.GetHeigth()) neighbourList.Add(GetNode(currentNode.x - 1, currentNode.y + 1));
+        }
+
+        if (currentNode.x + 1 < grid.GetWidth())
+        {
+            //Right
+            if (i == 3)
+                neighbourList.Add(GetNode(currentNode.x + 1, currentNode.y));
+            //Right Down
+            if (i == 4)
+                if (currentNode.y - 1 >= 0) neighbourList.Add(GetNode(currentNode.x + 1, currentNode.y - 1));
+            //Right Up
+            if (i == 5)
+                if (currentNode.y + 1 < grid.GetHeigth()) neighbourList.Add(GetNode(currentNode.x + 1, currentNode.y + 1));
+        }
+
+        //Down
+        if (i == 6)
+            if (currentNode.y - 1 >= 0) neighbourList.Add(GetNode(currentNode.x, currentNode.y - 1));
+
+        //Up
+        if (i == 7)
+            if (currentNode.y + 1 < grid.GetHeigth()) neighbourList.Add(GetNode(currentNode.x, currentNode.y + 1));
+
+        return neighbourList;
+    }
+
     public List<PathNode> GetRangeList(PathNode currentNode)
     {
         List<PathNode> rangeList = new List<PathNode>();

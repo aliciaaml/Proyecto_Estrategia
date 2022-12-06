@@ -104,7 +104,9 @@ public class CharacterPathfinding : MonoBehaviour
         if (other.CompareTag("Ammo"))
         {
             totalBullets++;
-            Destroy(bulletAmmo);
+            pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
+            pathfinding.GetNode(x, y).SetIsAmmo(false);
+            //Destroy(bulletAmmo);
         }
     }
 }

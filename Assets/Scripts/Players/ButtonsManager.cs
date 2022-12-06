@@ -8,6 +8,7 @@ public class ButtonsManager : MonoBehaviour
     public Button shootButton;
     public Button moveButton;
     public Button wallButton;
+    public Button passButton;
     public GameObject m_Bullet;
     public GameObject m_TWall;
     public Text totalBulletsText;
@@ -67,7 +68,7 @@ public class ButtonsManager : MonoBehaviour
                         enabledShoot = false;
                         CharacterPathfinding.totalBullets--;
 
-                        if (!moveButton.interactable)
+                        if (!moveButton.interactable && !wallButton.interactable)
                         {
                             Test.playerTurn = 2;
                             shootButton.interactable = true;
@@ -90,7 +91,7 @@ public class ButtonsManager : MonoBehaviour
                     Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     characterPathfinding.SetTargetPosition(mouseWorldPosition);
 
-                    if (!shootButton.interactable)
+                    if (!shootButton.interactable && !wallButton.interactable)
                     {
                         Test.playerTurn = 2;
                         shootButton.interactable = true;
@@ -122,13 +123,27 @@ public class ButtonsManager : MonoBehaviour
                         GameObject tWallInstance = Instantiate(m_TWall, localPost, Quaternion.identity) as GameObject;
                         Test.tallWallList.Add(pathfinding.GetNode(x, y));
 
-                        //if (!shootButton.interactable)
-                        //{
-                            Test.playerTurn = 2;
-                            shootButton.interactable = true;
-                            moveButton.interactable = true;
-                            wallButton.interactable = true;
-                        //}
+                        List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(x, y));
+                        foreach (PathNode neighbourNode in neighbours)
+                        {
+                            if (pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isTWall || pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isSWall)
+                            {
+                                pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(false);
+                                pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(false);
+                            }
+
+                            else
+                            {
+                                pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(true);
+                                Test.stringGrid.GetGridObject(neighbourNode.x, neighbourNode.y).AddLetter("FH");
+                            }
+
+                        }
+
+                        Test.playerTurn = 2;
+                        shootButton.interactable = true;
+                        moveButton.interactable = true;
+                        wallButton.interactable = true;
                     }
                 }
             }
@@ -153,7 +168,7 @@ public class ButtonsManager : MonoBehaviour
                         enabledShoot = false;
                         CharacterPathfinding.totalBullets--;
 
-                        if (!moveButton.interactable)
+                        if (!moveButton.interactable && !wallButton.interactable)
                         {
                             Test.playerTurn = 1;
                             shootButton.interactable = true;
@@ -176,7 +191,7 @@ public class ButtonsManager : MonoBehaviour
                     Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     character2Pathfinding.SetTargetPosition(mouseWorldPosition);
 
-                    if (!shootButton.interactable)
+                    if (!shootButton.interactable && !wallButton.interactable)
                     {
                         Test.playerTurn = 1;
                         shootButton.interactable = true;
@@ -208,13 +223,27 @@ public class ButtonsManager : MonoBehaviour
                         GameObject tWallInstance = Instantiate(m_TWall, localPost, Quaternion.identity) as GameObject;
                         Test.tallWallList.Add(pathfinding.GetNode(x, y));
 
-                        //if (!shootButton.interactable)
-                        //{
+                        List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(x, y));
+                        foreach (PathNode neighbourNode in neighbours)
+                        {
+                            if (pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isTWall || pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isSWall)
+                            {
+                                    pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(false);
+                                    pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(false);
+                            }
+
+                            else
+                            {
+                                pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(true);
+                                Test.stringGrid.GetGridObject(neighbourNode.x, neighbourNode.y).AddLetter("FH");
+                            }
+                            
+                        }
+
                         Test.playerTurn = 1;
                         shootButton.interactable = true;
                         moveButton.interactable = true;
                         wallButton.interactable = true;
-                        //}
                     }
                 }
             }
@@ -246,5 +275,19 @@ public class ButtonsManager : MonoBehaviour
 
         enabledWall = true;
         wallButton.interactable = false;
+    }
+
+    public void PassTurn()
+    {
+        /*moveButton.interactable = true;
+        moveButton.interactable = true;
+        moveButton.interactable = true;
+
+        if (Test.playerTurn == 1)
+            Test.playerTurn = 2;
+            
+
+        if (Test.playerTurn == 2)
+            Test.playerTurn = 1;*/
     }
 }

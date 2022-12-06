@@ -169,6 +169,7 @@ public class EnemyPathfinding : MonoBehaviour
 
     void TakeDecisions(PathNode nodoActual)
     {
+
         range = pathfinding.GetRangeList(pathfinding.GetNode(nodoActual.x, nodoActual.y));
         PathNode closestPlayer = null;
         PathNode closestIA = null;

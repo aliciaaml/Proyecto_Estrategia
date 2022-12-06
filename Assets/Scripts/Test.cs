@@ -132,7 +132,7 @@ public class Test : MonoBehaviour
         pathfinding.GetNode(8, 8).SetIsHalfHiding(false);
         stringGrid.GetGridObject(8, 8).AddLetter("TW");
         Vector3 localPost2 = pathfinding.GetGrid().GetWorldPosition(8, 8) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
-        GameObject tWallInstance2 = Instantiate(m_TWall, localPost, Quaternion.identity) as GameObject;
+        GameObject tWallInstance2 = Instantiate(m_TWall, localPost2, Quaternion.identity) as GameObject;
         tallWallList.Add(pathfinding.GetNode(8, 8));
 
         foreach (PathNode wall in tallWallList)

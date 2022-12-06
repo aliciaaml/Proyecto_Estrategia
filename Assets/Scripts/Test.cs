@@ -5,25 +5,156 @@ using UnityEngine;
 
 public class Test : MonoBehaviour
 {
-    private GridManager<int> intGrid;
-    private GridManager<StringGridObject> stringGrid;
-    private Pathfinding pathfinding;
+    private GridManager<StringGridObject> stringGrid;  //Solo para escribir las letras en las celdas
+    public static Pathfinding pathfinding;
+    public static bool IATurn;
+    public static int playerTurn;
 
-    public GameObject m_Character1;
-    public GameObject m_Enemy1;
+    //public GameObject m_Character1;
+    //public GameObject m_Enemy1;
     public GameObject m_TWall;
     public GameObject m_SWall;
     private List<PathNode> tallWallList;
     private List<PathNode> smallWallList;
+    public GameObject IACharacter;
 
-    [SerializeField] private CharacterPathfinding characterPathfinding;
+    public static bool saltado = false;
 
-    private void Start()
+    public EnemyPathfinding enemyPathfinding;
+
+    private void Awake()
     {
         pathfinding = new Pathfinding(12, 12);
         stringGrid = new GridManager<StringGridObject>(12, 12, 10f, Vector3.zero, (GridManager<StringGridObject> g, int x, int y) => new StringGridObject(g, x, y));  // width, heigth, cellSize, OriginPosition
+
+        IATurn = true;
+        playerTurn = 1;
+        
         tallWallList = new List<PathNode>();
         smallWallList = new List<PathNode>();
+
+        //SOAWN DE MUROS ALEATORIO
+        /////////////////////////////////////////////////////
+
+        //for (int x = 0; x < pathfinding.GetGrid().GetWidth(); x++)
+        //{
+        //    for (int y = 3; y < 9; y++)
+        //    {
+        //        var i = UnityEngine.Random.Range(0, 8);
+
+        //        if (i == 0)
+        //        {
+        //            pathfinding.GetNode(x, y).SetIsWalkeable(false);
+        //            pathfinding.GetNode(x, y).SetIsTallWall(true);
+        //            pathfinding.GetNode(x, y).SetIsFullHiding(false);
+        //            pathfinding.GetNode(x, y).SetIsHalfHiding(false);
+        //            stringGrid.GetGridObject(x, y).AddLetter("TW");
+        //            Vector3 post = pathfinding.GetGrid().GetWorldPosition(x, y) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+        //            Instantiate(m_TWall, post, Quaternion.identity);
+        //            tallWallList.Add(pathfinding.GetNode(x, y));
+        //        }
+        //        else if (i == 1)
+        //        {
+        //            pathfinding.GetNode(x, y).SetIsWalkeable(false);
+        //            pathfinding.GetNode(x, y).SetIsSmallWall(true);
+        //            pathfinding.GetNode(x, y).SetIsFullHiding(false);
+        //            pathfinding.GetNode(x, y).SetIsHalfHiding(false);
+        //            stringGrid.GetGridObject(x, y).AddLetter("SW");
+        //            Vector3 post = pathfinding.GetGrid().GetWorldPosition(x, y) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+        //            Instantiate(m_SWall, post, Quaternion.identity);
+        //            smallWallList.Add(pathfinding.GetNode(x, y));
+        //        }
+        //    }
+        //}
+
+        //foreach (PathNode wall in tallWallList)
+        //{
+        //    List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(wall.x, wall.y));
+        //    foreach (PathNode neighbourNode in neighbours)
+        //    {
+        //        if (pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isTWall || pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isSWall)
+        //        {
+        //            pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(false);
+        //            pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(false);
+        //        }
+
+        //        else
+        //        {
+        //            pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(true);
+        //            stringGrid.GetGridObject(neighbourNode.x, neighbourNode.y).AddLetter("FH");
+        //        }
+        //    }
+        //}
+
+        //foreach (PathNode wall in smallWallList)
+        //{
+        //    List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(wall.x, wall.y));
+        //    foreach (PathNode neighbourNode in neighbours)
+        //    {
+        //        if (pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isTWall || pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isSWall)
+        //        {
+        //            pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(false);
+        //            pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(false);
+        //        }
+
+        //        else
+        //        {
+        //            pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(true);
+        //            stringGrid.GetGridObject(neighbourNode.x, neighbourNode.y).AddLetter("HH");
+        //        }
+        //    }
+        //}
+
+        ////////////////////////////////////////////////////
+
+
+
+        pathfinding.GetNode(3, 3).SetIsPlayer(true);
+        stringGrid.GetGridObject(3, 3).AddLetter("Player");
+
+        pathfinding.GetNode(2, 2).SetIsIA(true);
+        stringGrid.GetGridObject(2, 2).AddLetter("IA");
+
+
+        //Tall walls
+        pathfinding.GetNode(0, 6).SetIsWalkeable(false);
+        pathfinding.GetNode(0, 6).SetIsTallWall(true);
+        pathfinding.GetNode(0, 6).SetIsFullHiding(false);
+        pathfinding.GetNode(0, 6).SetIsHalfHiding(false);
+        stringGrid.GetGridObject(0, 6).AddLetter("TW");
+        Vector3 localPost = pathfinding.GetGrid().GetWorldPosition(0, 6) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+        GameObject tWallInstance = Instantiate(m_TWall, localPost, Quaternion.identity) as GameObject;
+        tallWallList.Add(pathfinding.GetNode(0, 6));
+
+        pathfinding.GetNode(8, 8).SetIsWalkeable(false);
+        pathfinding.GetNode(8, 8).SetIsTallWall(true);
+        pathfinding.GetNode(8, 8).SetIsFullHiding(false);
+        pathfinding.GetNode(8, 8).SetIsHalfHiding(false);
+        stringGrid.GetGridObject(8, 8).AddLetter("TW");
+        Vector3 localPost2 = pathfinding.GetGrid().GetWorldPosition(8, 8) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+        GameObject tWallInstance2 = Instantiate(m_TWall, localPost2, Quaternion.identity) as GameObject;
+        tallWallList.Add(pathfinding.GetNode(8, 8));
+
+        foreach (PathNode wall in tallWallList)
+        {
+            List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(wall.x, wall.y));
+            foreach (PathNode neighbourNode in neighbours)
+            {
+                if (pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isTWall || pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isSWall)
+                {
+                    pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(false);
+                    pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(false);
+                }
+
+                else
+                {
+                    pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(true);
+                    stringGrid.GetGridObject(neighbourNode.x, neighbourNode.y).AddLetter("FH");
+                }
+            }
+        }
+
+
 
         //Vector3 localPost1 = pathfinding.GetGrid().GetWorldPosition(2, 2) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
         //GameObject Character1Instance = Instantiate(m_Character1, localPost1, Quaternion.identity) as GameObject;
@@ -52,8 +183,22 @@ public class Test : MonoBehaviour
         intGrid.SetGridObject(UnityEngine.Random.Range(0, 3), UnityEngine.Random.Range(8, 11), 3);*/
     }
 
+
     private void Update()
     {
+        //COMPROBAMOS SI LA IA HA SALTADO YA A ALG�N ENEMIGO
+
+        if (IATurn)
+        {
+            pathfinding.GetGrid().GetXY(IACharacter.transform.position, out int x, out int y);
+
+            if (pathfinding.GetNode(x, y).isIA)
+            {
+                saltado = true;
+            }
+        }
+
+
         /*if (Input.GetMouseButtonDown(0))
         {
             Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -71,7 +216,31 @@ public class Test : MonoBehaviour
         }*/
 
 
+        //if (Input.GetKey(KeyCode.P))
+        //{
+        //    Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //    pathfinding.GetGrid().GetXY(mouseWorldPosition, out int x, out int y);
 
+        //    pathfinding.GetNode(x, y).SetIsPlayer(true);
+        //    stringGrid.GetGridObject(x, y).AddLetter("Player");
+
+        //}
+
+
+        //if (Input.GetKey(KeyCode.I))
+        //{
+        //    Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        //    pathfinding.GetGrid().GetXY(mouseWorldPosition, out int x, out int y);
+
+        //    pathfinding.GetNode(x, y).SetIsIA(true);
+        //    stringGrid.GetGridObject(x, y).AddLetter("IA");
+
+        //}
+
+
+
+
+        //Poner muros manualmente
         if (Input.GetMouseButtonDown(1))
         {
             Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -82,6 +251,7 @@ public class Test : MonoBehaviour
             if (!pathfinding.GetNode(x, y).isWalkeable)
             {
                 var i = UnityEngine.Random.Range(0,2);
+
                 if(i == 0)
                 {
                 
@@ -95,6 +265,7 @@ public class Test : MonoBehaviour
 
 
                 }
+
                 else
                 {
                     pathfinding.GetNode(x, y).SetIsSmallWall(true);
@@ -133,6 +304,7 @@ public class Test : MonoBehaviour
                         }
                     }
                 }
+
                 else if (pathfinding.GetNode(x, y).isSWall)
                 {
                     stringGrid.GetGridObject(x, y).AddLetter("");
@@ -156,8 +328,6 @@ public class Test : MonoBehaviour
                     }
                 }
             }
-            
-
 
             foreach (PathNode wall in tallWallList)
             {
@@ -198,7 +368,13 @@ public class Test : MonoBehaviour
             }
         }
     }
+
+    //public Vector3 GetPosition()
+    //{
+    //    return transform.position;
+    //}
 }
+
 
 public class StringGridObject
 {
@@ -226,4 +402,5 @@ public class StringGridObject
     {
         return letters;
     }
+
 }

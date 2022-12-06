@@ -4,14 +4,21 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
+    Pathfinding pathfinding;
     private Vector3 shootDir;
     private int damage;
+    private PathNode destinationNode;
 
+    void Start()
+    {
+        pathfinding = Pathfinding.Instance;
+    }
 
-    public void SetUp(Vector3 shootDir)
+    public void SetUp(Vector3 shootDir, PathNode node)
     {
         this.shootDir = shootDir;
         damage = 20;
+        destinationNode = node;
 
         //En caso de poner un sprite y querer cambiar su orientacion:
         //////////////
@@ -20,9 +27,6 @@ public class Bullet : MonoBehaviour
         if (n < 0) n += 360;
         transform.eulerAngles = new Vector3(0, 0, n);
         //////////////
-
-        //Si hacemos que pueda disparar a cualquier lado:
-        //Destroy(gameObject, 5f);  //Para que se destruya la bala despues de 5 seg
     }
 
     
@@ -30,6 +34,12 @@ public class Bullet : MonoBehaviour
     {
         float moveSpeed = 100f;
         transform.position += shootDir * moveSpeed * Time.deltaTime;
+        
+        pathfinding.GetGrid().GetXY(transform.position, out int x, out int y);
+        if (pathfinding.GetNode(x, y)== destinationNode)
+        {
+            Destroy(gameObject);
+        }
     }
 
 

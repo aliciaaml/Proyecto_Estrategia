@@ -14,8 +14,8 @@ public class PathNode
 
     public bool isWalkeable;
     public bool isInRange;
-    public bool isEnemy;
-    public bool isFriend;
+    public bool isPlayer;
+    public bool isIA;
     public bool isTWall;
     public bool isSWall;
     public bool isHalfHiding;
@@ -31,8 +31,8 @@ public class PathNode
         
         isWalkeable = true;
         isInRange = false;
-        isEnemy = false;
-        isFriend = false;
+        isPlayer = false;
+        isIA = false;
         isTWall = false;
         isSWall = false;
         isHalfHiding = false;
@@ -57,15 +57,15 @@ public class PathNode
         grid.TriggerGridObjectChanged(x, y);
     }
 
-    public void SetIsFriend(bool isFriend)
+    public void SetIsPlayer(bool isPlayer)
     {
-        this.isFriend = isFriend;
+        this.isPlayer = isPlayer;
         grid.TriggerGridObjectChanged(x, y);
     }
 
-    public void SetIsEnemy(bool isEnemy)
+    public void SetIsIA(bool isIA)
     {
-        this.isEnemy = isEnemy;
+        this.isIA = isIA;
         grid.TriggerGridObjectChanged(x, y);
     }
 

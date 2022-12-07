@@ -16,8 +16,8 @@ public class PlayerHealth : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy"))
-            TakeDamage(20);
+        if (other.CompareTag("Enemy") && (Test.playerTurn == 1 || Test.playerTurn == 2))
+            other.gameObject.GetComponent<EnemyHealth>().TakeDamage(20);
     }
 
     void Update()

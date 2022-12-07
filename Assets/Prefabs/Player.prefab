@@ -325,6 +325,7 @@ GameObject:
   - component: {fileID: 3449629225065325002}
   - component: {fileID: 6051218447760328091}
   - component: {fileID: 6051218447760328081}
+  - component: {fileID: 2925641799249099989}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -503,3 +504,17 @@ MonoBehaviour:
   totalWallsText: {fileID: 0}
   characterPathfinding: {fileID: 6051218447760328091}
   character2Pathfinding: {fileID: 0}
+--- !u!114 &2925641799249099989
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6051218447760328089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 32be6a3665cd0ea41b7f839543ed6847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  healthBar: {fileID: 81483670908696196}

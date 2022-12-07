@@ -56,9 +56,15 @@ public class Bullet : MonoBehaviour
             damage = 10;
         }
 
-        if (collision.gameObject.tag == "Enemy")
+        if (collision.gameObject.tag == "Enemy" && (Test.playerTurn == 1 || Test.playerTurn == 2))
         {
             collision.gameObject.GetComponent<EnemyHealth>().TakeDamage(damage);
+            Destroy(gameObject);
+        }
+
+        if (collision.gameObject.tag == "Player" && Test.IATurn)
+        {
+            collision.gameObject.GetComponent<PlayerHealth>().TakeDamage(damage);
             Destroy(gameObject);
         }
     }

@@ -9,6 +9,7 @@ public class EnemyPathfinding : MonoBehaviour
     List<Vector3> pathVectorList;
     int currentPathIndex;
     public List<PathNode> range = new List<PathNode>();
+    public bool IAEnd;
     
     //List<Vector3> secondPathVectorList;
     //int secondPathIndex;;
@@ -19,7 +20,7 @@ public class EnemyPathfinding : MonoBehaviour
         pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
         pathfinding.GetNode(x, y).SetIsIA(true);
         range = pathfinding.GetRangeList(pathfinding.GetNode(x, y));
-
+        IAEnd = false;
     }
     public void Update()
     {
@@ -28,7 +29,7 @@ public class EnemyPathfinding : MonoBehaviour
             pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
             //Debug.Log(pathfinding.GetNode(x, y));
             TakeDecisions(pathfinding.GetNode(x, y));
-            //enemyTurn = false;
+            if(IAEnd) PassToPlayerTurn();
         }
 
         HandleMovement();
@@ -294,5 +295,23 @@ public class EnemyPathfinding : MonoBehaviour
 
             }
         }
+        IAEnd = true;
+    }
+
+    void PassToPlayerTurn()
+    {
+        IAEnd = false;
+        ButtonsManager.enabledShoot = true;
+        ButtonsManager.enabledMove = true;
+        ButtonsManager.enabledWall = true;
+        Test.returnTurn = true;
+        Test.IATurn = false;
+        
+        if (Test.playerTurn == 1) 
+            Test.playerTurn = 2;
+
+        else if (Test.playerTurn == 2) 
+            Test.playerTurn = 1;
+
     }
 }

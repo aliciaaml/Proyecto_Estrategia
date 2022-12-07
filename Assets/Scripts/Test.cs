@@ -9,6 +9,7 @@ public class Test : MonoBehaviour
     public static Pathfinding pathfinding;
     public static bool IATurn;
     public static int playerTurn;
+    public static bool returnTurn;
 
     //public GameObject m_Character1;
     //public GameObject m_Enemy1;
@@ -205,12 +206,18 @@ public class Test : MonoBehaviour
 
         if (IATurn)
         {
+            Debug.Log("Turno de la IA");
             pathfinding.GetGrid().GetXY(IACharacter.transform.position, out int x, out int y);
 
             if (pathfinding.GetNode(x, y).isIA)
             {
                 saltado = true;
             }
+        }
+
+        else
+        {
+            Debug.Log("Turno del player " + playerTurn);
         }
 
 

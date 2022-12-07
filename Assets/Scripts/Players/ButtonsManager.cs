@@ -14,6 +14,7 @@ public class ButtonsManager : MonoBehaviour
     public Text totalBulletsText;
     public Text totalWallsText;
     //public Transform targetPosition;
+    
 
     public static bool enabledShoot;
     public static bool enabledMove;
@@ -44,6 +45,14 @@ public class ButtonsManager : MonoBehaviour
             wallButton.interactable = false;
         }
 
+        if (Test.returnTurn)
+        {
+            shootButton.interactable = true;
+            moveButton.interactable = true;
+            wallButton.interactable = true;
+            Test.returnTurn = false;
+        }
+
         /*if (CharacterPathfinding.totalBullets == 0)
             shootButton.interactable = false;
 
@@ -68,14 +77,6 @@ public class ButtonsManager : MonoBehaviour
                         enabledShoot = false;
                         CharacterPathfinding.totalBullets--;
 
-                        if (!moveButton.interactable && !wallButton.interactable)
-                        {
-                            Test.playerTurn = 2;
-                            shootButton.interactable = true;
-                            moveButton.interactable = true;
-                            wallButton.interactable = true;
-                        }
-
                         //Para no desbloquear el boton despues del disparo, comentar:
                         //shootButton.interactable = true;
                     }
@@ -90,14 +91,6 @@ public class ButtonsManager : MonoBehaviour
                 {
                     Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     characterPathfinding.SetTargetPosition(mouseWorldPosition);
-
-                    if (!shootButton.interactable && !wallButton.interactable)
-                    {
-                        Test.playerTurn = 2;
-                        shootButton.interactable = true;
-                        moveButton.interactable = true;
-                        wallButton.interactable = true;
-                    }
 
                     //Para no desbloquear el boton despues del disparo, comentar:
                     //moveButton.interactable = true;
@@ -139,11 +132,6 @@ public class ButtonsManager : MonoBehaviour
                             }
 
                         }
-
-                        Test.playerTurn = 2;
-                        shootButton.interactable = true;
-                        moveButton.interactable = true;
-                        wallButton.interactable = true;
                     }
                 }
             }
@@ -170,10 +158,10 @@ public class ButtonsManager : MonoBehaviour
 
                         if (!moveButton.interactable && !wallButton.interactable)
                         {
-                            Test.playerTurn = 1;
-                            shootButton.interactable = true;
-                            moveButton.interactable = true;
-                            wallButton.interactable = true;
+                            //Test.playerTurn = 1;
+                            //shootButton.interactable = true;
+                            //moveButton.interactable = true;
+                            //wallButton.interactable = true;
                         }
 
                         //Para no desbloquear el boton despues del disparo, comentar:
@@ -190,14 +178,6 @@ public class ButtonsManager : MonoBehaviour
                 {
                     Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     character2Pathfinding.SetTargetPosition(mouseWorldPosition);
-
-                    if (!shootButton.interactable && !wallButton.interactable)
-                    {
-                        Test.playerTurn = 1;
-                        shootButton.interactable = true;
-                        moveButton.interactable = true;
-                        wallButton.interactable = true;
-                    }
 
                     //Para no desbloquear el boton despues del disparo, comentar:
                     //moveButton.interactable = true;
@@ -239,11 +219,6 @@ public class ButtonsManager : MonoBehaviour
                             }
                             
                         }
-
-                        Test.playerTurn = 1;
-                        shootButton.interactable = true;
-                        moveButton.interactable = true;
-                        wallButton.interactable = true;
                     }
                 }
             }
@@ -279,15 +254,10 @@ public class ButtonsManager : MonoBehaviour
 
     public void PassTurn()
     {
-        /*moveButton.interactable = true;
-        moveButton.interactable = true;
-        moveButton.interactable = true;
+        shootButton.interactable = false;
+        moveButton.interactable = false;
+        wallButton.interactable = false;
 
-        if (Test.playerTurn == 1)
-            Test.playerTurn = 2;
-            
-
-        if (Test.playerTurn == 2)
-            Test.playerTurn = 1;*/
+        Test.IATurn = true;
     }
 }

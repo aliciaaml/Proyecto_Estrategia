@@ -106,7 +106,7 @@ public class CharacterPathfinding : MonoBehaviour
             totalBullets++;
             pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
             pathfinding.GetNode(x, y).SetIsAmmo(false);
-            //Destroy(bulletAmmo);
+            Destroy(other.gameObject);
         }
     }
 }

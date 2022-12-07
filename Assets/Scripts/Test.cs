@@ -116,7 +116,6 @@ public class Test : MonoBehaviour
                     Vector3 post = pathfinding.GetGrid().GetWorldPosition(neighbourNode.x, neighbourNode.y) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
                     pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsAmmo(true);
                     Instantiate(m_Ammo, post, Quaternion.identity);
-                    Debug.Log("ammo");
                 }
             }
         }

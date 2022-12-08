@@ -24,6 +24,8 @@ public class ButtonsManager : MonoBehaviour
     public CharacterPathfinding characterPathfinding;
     public CharacterPathfinding character2Pathfinding;
 
+
+
     private void Start()
     {
         enabledShoot = false;
@@ -31,6 +33,7 @@ public class ButtonsManager : MonoBehaviour
         enabledWall = false;
 
         pathfinding = Pathfinding.Instance;
+        
     }
 
     private void Update()

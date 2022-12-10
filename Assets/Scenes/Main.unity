@@ -2291,7 +2291,7 @@ MonoBehaviour:
   m_TWall: {fileID: 1363108326892833955, guid: 4c15dc07031d2074296dfa9a5e7d97fc, type: 3}
   m_SWall: {fileID: 7485682400079419059, guid: fabd7cb60de5ac54cb781cee3b286370, type: 3}
   m_Ammo: {fileID: 235092146634076742, guid: b1773469994dc284a8282e84b2920ebf, type: 3}
-  IACharacter: {fileID: 503125341}
+  IACharacter: {fileID: 2056324467}
   enemyPathfinding: {fileID: 7030499732456855588}
 --- !u!4 &695385786
 Transform:
@@ -3033,6 +3033,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dbb371c3aac11b542aee0c9634e1d966, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &2056324467 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7583414035885383947, guid: 676009b92215d24439659a7551dff581, type: 3}
+  m_PrefabInstance: {fileID: 7726131688105234702}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2141886898
 GameObject:
   m_ObjectHideFlags: 0
@@ -3231,7 +3236,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 768393237482637610, guid: 676009b92215d24439659a7551dff581, type: 3}
   m_PrefabInstance: {fileID: 7726131688105234702}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 2056324467}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 77e6433abdd2b0c49bfaddff0ba66360, type: 3}
@@ -3252,6 +3257,10 @@ PrefabInstance:
       propertyPath: m_AnchorMax.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 768393237482637610, guid: 676009b92215d24439659a7551dff581, type: 3}
+      propertyPath: m_Bullet
+      value: 
+      objectReference: {fileID: 5399131062309883495, guid: ec23d436510ded04899f614823e2a9f2, type: 3}
     - target: {fileID: 768393237482637610, guid: 676009b92215d24439659a7551dff581, type: 3}
       propertyPath: bulletAmmo
       value: 

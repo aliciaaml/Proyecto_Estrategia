@@ -21,6 +21,7 @@ public class Test : MonoBehaviour
     public GameObject IACharacter;
 
     public static bool saltado = false;
+    public static bool hide=false;
 
     public EnemyPathfinding enemyPathfinding;
 
@@ -205,22 +206,29 @@ public class Test : MonoBehaviour
 
     private void Update()
     {
+  
         //COMPROBAMOS SI LA IA HA SALTADO YA A ALG�N ENEMIGO
 
         if (IATurn)
         {
-            Debug.Log("Turno de la IA");
+            //Debug.Log("Turno de la IA");
+
+           
             pathfinding.GetGrid().GetXY(IACharacter.transform.position, out int x, out int y);
 
             if (pathfinding.GetNode(x, y).isIA)
             {
                 saltado = true;
             }
+
+
+
+
         }
 
         else
         {
-            Debug.Log("Turno del player " + playerTurn);
+           // Debug.Log("Turno del player " + playerTurn);
         }
 
 

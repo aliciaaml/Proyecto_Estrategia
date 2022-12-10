@@ -17,7 +17,9 @@ public class EnemyPathfinding : MonoBehaviour
     public GameObject bulletAmmo;
 
     public static int totalWalls = 3;
-    public static int totalBullets = 3;
+
+    public GameObject m_Bullet;
+    int totalBullets = 3;
 
 
     void Start()
@@ -170,6 +172,7 @@ public class EnemyPathfinding : MonoBehaviour
         float minDistIA = 10000;
         float minDistAmmo = 10000;
         float maxDistHiding = 0;
+        
 
         foreach (PathNode node in range) //Guardar jugador o IA más cercanos
         {
@@ -291,7 +294,31 @@ public class EnemyPathfinding : MonoBehaviour
                     {
                         Debug.Log("Tiene balas y vida closestPlayer > 20");
                         SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y), pathfinding.GetGrid().GetWorldPosition(choosenHalfHiding.x, choosenHalfHiding.y));
+                        
                         //Disparar desde choosenHalfHiding
+
+                        pathfinding.GetGrid().GetXY(transform.position, out int x, out int y);
+
+                        if(pathfinding.GetNode(x,y).isHalfHiding){
+
+                            Debug.Log("ajñsldfkjasdlfkjsdfkñjsdñflk");
+
+                            GameObject bulletInstance = Instantiate(m_Bullet, transform.position, Quaternion.identity) as GameObject;
+                            Vector3 shootDir = (pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y) - bulletInstance.transform.position).normalized;
+                            bulletInstance.GetComponent<Bullet>().SetUp(shootDir, pathfinding.GetNode(closestPlayer.x, closestPlayer.y)); 
+
+                            totalBullets-=1;
+                            Debug.Log("Quedan: " + totalBullets);
+
+
+                        }
+                        
+
+                        
+                        
+
+                        
+                        
                     }
                     else //O no tiene balas o vida closestPlayer < 20
                     {

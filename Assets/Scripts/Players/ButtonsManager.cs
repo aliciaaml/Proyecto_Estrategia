@@ -68,7 +68,7 @@ public class ButtonsManager : MonoBehaviour
             {
                 wallButton.interactable = false;
 
-                if (Input.GetMouseButtonDown(0) && CharacterPathfinding.totalBullets > 0)  //Space de momento, pero bloquear movimiento y usar raton
+                if (Input.GetMouseButtonDown(0) && CharacterPathfinding.totalBullets > 0) 
                 {
                     Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     pathfinding.GetGrid().GetXY(mouseWorldPosition, out int x, out int y);

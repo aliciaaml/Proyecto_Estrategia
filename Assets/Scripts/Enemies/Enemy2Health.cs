@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyHealth : MonoBehaviour
+public class Enemy2Health : MonoBehaviour
 {
     public int maxHealth;
     public static float currentHealth;

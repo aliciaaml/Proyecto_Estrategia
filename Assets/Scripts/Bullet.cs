@@ -62,7 +62,7 @@ public class Bullet : MonoBehaviour
             Destroy(gameObject);
         }
 
-        if (collision.gameObject.tag == "Player" && Test.IATurn)
+        if (collision.gameObject.tag == "Player" && Test.isIATurn)
         {
             collision.gameObject.GetComponent<PlayerHealth>().TakeDamage(damage);
             Destroy(gameObject);

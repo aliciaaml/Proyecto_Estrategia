@@ -41,7 +41,7 @@ public class ButtonsManager : MonoBehaviour
         totalBulletsText.text = CharacterPathfinding.totalBullets.ToString();
         totalWallsText.text = CharacterPathfinding.totalWalls.ToString();
 
-        if (Test.IATurn)
+        if (Test.isIATurn)
         {
             shootButton.interactable = false;
             moveButton.interactable = false;
@@ -261,6 +261,11 @@ public class ButtonsManager : MonoBehaviour
         moveButton.interactable = false;
         wallButton.interactable = false;
 
-        Test.IATurn = true;
+        if (Test.IATurn == 1)
+            Test.IATurn = 2;
+
+        else if (Test.IATurn == 2)
+            Test.IATurn = 1;
+        Test.isIATurn = true;
     }
 }

@@ -43,7 +43,7 @@ public class Test : MonoBehaviour
         {
             for (int y = 3; y < 9; y++)
             {
-                var i = UnityEngine.Random.Range(0, 8);
+                var i = UnityEngine.Random.Range(0, 14);
 
                 if (i == 0)
                 {
@@ -121,7 +121,7 @@ public class Test : MonoBehaviour
             }
         }
 
-        ////////////////////////////////////////////////////
+        //////////////////////////////////////////////////
 
 
 
@@ -200,7 +200,7 @@ public class Test : MonoBehaviour
         //Vector3 localPost2 = pathfinding.GetGrid().GetWorldPosition(5, 5) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
         //GameObject Enemy1Instance = Instantiate(m_Enemy1, localPost2, Quaternion.identity) as GameObject;
 
-
+        
     }
 
 

@@ -15,6 +15,7 @@ public class EnemyPathfinding : MonoBehaviour
     public bool IAEnd;
 
     public GameObject bulletAmmo;
+    public GameObject m_TWall;
 
     public static int totalWalls = 3;
 
@@ -225,7 +226,6 @@ public class EnemyPathfinding : MonoBehaviour
                             farthestHiding = neighbourNode;
                         }
                     }
-
                 }
             }
         }
@@ -270,7 +270,7 @@ public class EnemyPathfinding : MonoBehaviour
                     }
                 }
 
-                if(smallWall != null) //En rango de closestPlayer hay smallWall
+                if (smallWall != null) //En rango de closestPlayer hay smallWall
                 {
                     Debug.Log("En rango de closestPlayer hay smallWall");
 
@@ -299,7 +299,7 @@ public class EnemyPathfinding : MonoBehaviour
 
                         pathfinding.GetGrid().GetXY(transform.position, out int x, out int y);
 
-                        if(pathfinding.GetNode(x,y).isHalfHiding){
+                        if (pathfinding.GetNode(x,y).isHalfHiding){
 
                             Debug.Log("ajñsldfkjasdlfkjsdfkñjsdñflk");
 
@@ -312,14 +312,8 @@ public class EnemyPathfinding : MonoBehaviour
 
 
                         }
-                        
-
-                        
-                        
-
-                        
-                        
                     }
+
                     else //O no tiene balas o vida closestPlayer < 20
                     {
                         Debug.Log("O no tiene balas o vida closestPlayer < 20");
@@ -327,7 +321,7 @@ public class EnemyPathfinding : MonoBehaviour
                     }
                 }
 
-                else if(tallWall != null) //En rango de closestPlayer hay tallWall
+                else if (tallWall != null) //En rango de closestPlayer hay tallWall
                 {
                     float maxDist = 0;
                     List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(tallWall.x, tallWall.y));
@@ -361,7 +355,7 @@ public class EnemyPathfinding : MonoBehaviour
 
                     else //No tiene muros cerca o no tiene balas
                     {
-                        if(ammoPlayer != null) //Hay balas en rango de closestPlayer
+                        if (ammoPlayer != null) //Hay balas en rango de closestPlayer
                         {
                             Debug.Log("Hay balas en rango de closestPlayer");
                             SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y), pathfinding.GetGrid().GetWorldPosition(ammoPlayer.x, ammoPlayer.y));
@@ -497,9 +491,58 @@ public class EnemyPathfinding : MonoBehaviour
 
                     }
                 }
+
+                else if (tallWall != null && totalBullets > 0) //Tiene muro alto en rango y balas
+                {
+                    //Dispara
+                    SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(choosenFullHiding.x, choosenFullHiding.y));
+                }
+
+                else if (smallWall != null && totalBullets > 0) //Tiene muro bajo en rango y balas
+                {
+                    //Dispara
+                    SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(choosenHalfHiding.x, choosenHalfHiding.y));
+                }
+
+                else
+                {
+                    if (closestAmmo != null) //Hay munición en rango
+                    {
+                        Debug.Log("Hay munición en rango");
+                        List<PathNode> AmmoRange = pathfinding.GetRangeList(pathfinding.GetNode(closestAmmo.x, closestAmmo.y));
+                        PathNode playerNearAmmo = null;
+                        float minDistPlayerAmmo = 10000;
+
+                        foreach (PathNode node in AmmoRange) //Guardar player en rango de munición
+                        {
+                            if (pathfinding.GetNode(node.x, node.y).isPlayer) //Se encuentra player en rango de munición
+                            {
+                                if (minDistPlayerAmmo > Vector2.Distance(new Vector2(closestAmmo.x, closestAmmo.y), new Vector2(node.x, node.y)))
+                                {
+                                    playerNearAmmo = node;
+                                    minDistPlayerAmmo = Vector2.Distance(new Vector2(closestAmmo.x, closestAmmo.y), new Vector2(node.x, node.y));
+                                }
+                            }
+                        }
+
+                        if (closestAmmo != null && playerNearAmmo != null) //Hay munición en rango y en el rango del player hay munición
+                        {
+                            SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(closestAmmo.x, closestAmmo.y));
+                            //Dispara
+                        }
+
+                        else if (closestAmmo != null) //Hay munición en rango
+                        {
+                            SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(closestAmmo.x, closestAmmo.y));
+                        }
+
+                        else
+                        {
+                            IACreatesWall(closestPlayer, nodoActual);
+                        }
+                    }
+                }
             }
-
-
             
 
             /*
@@ -618,7 +661,7 @@ public class EnemyPathfinding : MonoBehaviour
 
                 if (totalBullets <= 1)
                 {
-                    if(closestAmmo != null) //Hay munición en rango
+                    if (closestAmmo != null) //Hay munición en rango
                     {
                         Debug.Log("Hay munición en rango");
                         List<PathNode> AmmoRange = pathfinding.GetRangeList(pathfinding.GetNode(closestAmmo.x, closestAmmo.y));
@@ -673,10 +716,11 @@ public class EnemyPathfinding : MonoBehaviour
                 else //No hay player, ni IA, ni balas ni muros cerca
                 {
                     Debug.Log("No hay player, ni IA, ni balas ni muros cerca");
-                    //Crea un muro entre él y el player
+                    IACreatesWall(closestPlayer, nodoActual);
                 }
             }
         }
+
         IAEnd = true;
     }
 
@@ -693,4 +737,81 @@ public class EnemyPathfinding : MonoBehaviour
             Test.playerTurn = 1;
     }
 
+    void IACreatesWall(PathNode closestPlayer, PathNode actualNode)
+    {
+        /*int x;
+        int y;
+
+        if (closestPlayer.x == actualNode.x && closestPlayer.y > actualNode.y)
+        {
+            x = actualNode.x;
+            y = actualNode.y + 1;
+        }
+
+        else if (closestPlayer.x > actualNode.x && closestPlayer.y > actualNode.y)
+        {
+            x = actualNode.x + 1;
+            y = actualNode.y + 1;
+        }
+
+        else if (closestPlayer.x > actualNode.x && closestPlayer.y == actualNode.y)
+        {
+            x = actualNode.x + 1;
+            y = actualNode.y;
+        }
+
+        else if (closestPlayer.x > actualNode.x && closestPlayer.y < actualNode.y)
+        {
+            x = actualNode.x + 1;
+            y = actualNode.y - 1;
+        }
+
+        else if (closestPlayer.x == actualNode.x && closestPlayer.y < actualNode.y)
+        {
+            x = actualNode.x;
+            y = actualNode.y - 1;
+        }
+
+        else if (closestPlayer.x < actualNode.x && closestPlayer.y < actualNode.y)
+        {
+            x = actualNode.x - 1;
+            y = actualNode.y - 1;
+        }
+
+        else if (closestPlayer.x < actualNode.x && closestPlayer.y == actualNode.y)
+        {
+            x = actualNode.x - 1;
+            y = actualNode.y;
+        }
+
+        else
+        {
+            x = actualNode.x - 1;
+            y = actualNode.y + 1;
+        }
+
+        pathfinding.GetNode(x, y).SetIsTallWall(true);
+        pathfinding.GetNode(x, y).SetIsWalkeable(false);
+        Test.stringGrid.GetGridObject(x, y).AddLetter("TW");
+        Vector3 localPost = pathfinding.GetGrid().GetWorldPosition(x, y) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+        GameObject tWallInstance = Instantiate(m_TWall, localPost, Quaternion.identity) as GameObject;
+        Test.tallWallList.Add(pathfinding.GetNode(x, y));
+
+        List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(x, y));
+        foreach (PathNode neighbourNode in neighbours)
+        {
+            if (pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isTWall || pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isSWall)
+            {
+                pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(false);
+                pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(false);
+            }
+
+            else
+            {
+                pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(true);
+                Test.stringGrid.GetGridObject(neighbourNode.x, neighbourNode.y).AddLetter("FH");
+            }
+
+        }*/
+    }
 }

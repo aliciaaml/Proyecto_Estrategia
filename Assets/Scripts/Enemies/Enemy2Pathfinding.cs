@@ -848,7 +848,7 @@ public class Enemy2Pathfinding : MonoBehaviour
                         }
                         else //No hay balas en su propio rango
                         {
-                            IACreatesWall(closestPlayer, nodoActual); //Crea un muro entre IA y player
+                            IACreatesWall(closestPlayerToAttack, nodoActual); //Crea un muro entre IA y player
                         }
                     }
                 }
@@ -872,10 +872,8 @@ public class Enemy2Pathfinding : MonoBehaviour
                             {
                                 closestPlayerNotInRange = pathfinding.GetNode(x, y);
                                 minDistPlayerNotInRange = Vector2.Distance(new Vector2(nodoActual.x, nodoActual.y), new Vector2(x, y));
-
                             }
                         }
-
                     }
                 }
 
@@ -944,6 +942,7 @@ public class Enemy2Pathfinding : MonoBehaviour
                     else //No hay player, ni IA, ni balas ni muros cerca
                     {
                         Debug.Log("No hay player, ni IA, ni balas ni muros cerca");
+                        IACreatesWall(closestPlayerNotInRange, nodoActual);
                         //Crea un muro entre él y el player
                     }
                 }
@@ -957,7 +956,7 @@ public class Enemy2Pathfinding : MonoBehaviour
                 else //No hay player, ni IA, ni balas ni muros cerca
                 {
                     Debug.Log("No hay player, ni IA, ni balas ni muros cerca");
-                    IACreatesWall(closestPlayer, nodoActual);
+                    IACreatesWall(closestPlayerNotInRange, nodoActual);
                 }
             }
         }
@@ -980,7 +979,7 @@ public class Enemy2Pathfinding : MonoBehaviour
 
     void IACreatesWall(PathNode closestPlayer, PathNode actualNode)
     {
-        /*int x;
+        int x;
         int y;
 
         if (closestPlayer.x == actualNode.x && closestPlayer.y > actualNode.y)
@@ -1053,6 +1052,6 @@ public class Enemy2Pathfinding : MonoBehaviour
                 Test.stringGrid.GetGridObject(neighbourNode.x, neighbourNode.y).AddLetter("FH");
             }
 
-        }*/
+        }
     }
 }

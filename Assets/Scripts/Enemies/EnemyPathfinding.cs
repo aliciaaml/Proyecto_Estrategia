@@ -847,7 +847,7 @@ public class EnemyPathfinding : MonoBehaviour
                         }
                         else //No hay balas en su propio rango
                         {
-                            IACreatesWall(closestPlayer, nodoActual); //Crea un muro entre IA y player
+                            IACreatesWall(closestPlayerToAttack, nodoActual); //Crea un muro entre IA y player
                         }
                     }
                 }
@@ -874,7 +874,6 @@ public class EnemyPathfinding : MonoBehaviour
 
                             }
                         }
-                            
                     }
                 }
 
@@ -943,7 +942,7 @@ public class EnemyPathfinding : MonoBehaviour
                     else //No hay player, ni IA, ni balas ni muros cerca
                     {
                         Debug.Log("No hay player, ni IA, ni balas ni muros cerca");
-                        //Crea un muro entre él y el player
+                        IACreatesWall(closestPlayerNotInRange, nodoActual); //Crea un muro entre él y el player
                     }
                 }
 
@@ -956,12 +955,13 @@ public class EnemyPathfinding : MonoBehaviour
                 else //No hay player, ni IA, ni balas ni muros cerca
                 {
                     Debug.Log("No hay player, ni IA, ni balas ni muros cerca");
-                    IACreatesWall(closestPlayer, nodoActual);
+                    IACreatesWall(closestPlayerNotInRange, nodoActual);
                 }
             }
         }
 
         IAEnd = true;
+        Test.ammoReload++;
     }
 
     void PassToPlayerTurn()
@@ -979,7 +979,7 @@ public class EnemyPathfinding : MonoBehaviour
 
     void IACreatesWall(PathNode closestPlayer, PathNode actualNode)
     {
-        /*int x;
+        int x;
         int y;
 
         if (closestPlayer.x == actualNode.x && closestPlayer.y > actualNode.y)
@@ -1052,6 +1052,6 @@ public class EnemyPathfinding : MonoBehaviour
                 Test.stringGrid.GetGridObject(neighbourNode.x, neighbourNode.y).AddLetter("FH");
             }
 
-        }*/
+        }
     }
 }

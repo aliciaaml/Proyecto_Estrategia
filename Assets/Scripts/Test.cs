@@ -39,7 +39,7 @@ public class Test : MonoBehaviour
         tallWallList = new List<PathNode>();
         smallWallList = new List<PathNode>();
 
-        /*SPAWN DE MUROS ALEATORIO
+        //SPAWN DE MUROS ALEATORIO
         /////////////////////////////////////////////////////
 
         for (int x = 0; x < pathfinding.GetGrid().GetWidth(); x++)

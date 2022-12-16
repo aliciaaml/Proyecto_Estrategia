@@ -90,6 +90,7 @@ public class EnemyPathfinding : MonoBehaviour
                 }
             }
         }
+
         else
         {
             StopMoving();
@@ -314,7 +315,7 @@ public class EnemyPathfinding : MonoBehaviour
                     {
                         Debug.Log("Tiene balas y vida closestPlayer > 20");
                         SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y), pathfinding.GetGrid().GetWorldPosition(choosenHalfHiding.x, choosenHalfHiding.y));
-                        
+
                         //Disparar desde choosenHalfHiding
 
                         pathfinding.GetGrid().GetXY(transform.position, out int x, out int y);
@@ -680,6 +681,7 @@ public class EnemyPathfinding : MonoBehaviour
                             {
                                 //Salta y ataca
                                 SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y));
+
                                 //y se esconde en choosenHalfHidingAfterJump (hace 3 paths) (FALTA)
                                 //Y dispara (FALTA)
                             }

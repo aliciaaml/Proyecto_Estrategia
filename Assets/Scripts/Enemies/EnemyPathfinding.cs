@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class EnemyPathfinding : MonoBehaviour
 {
-    public float speed = 15f;
+    float speed = 15f;
     Pathfinding pathfinding;
     List<Vector3> pathVectorList;
     int currentPathIndex;
@@ -13,14 +13,10 @@ public class EnemyPathfinding : MonoBehaviour
     List<Vector3> thirdPathVectorList;
     int thirdPathIndex;
 
-    public List<PathNode> range = new List<PathNode>();
-    public bool IAEnd;
+    List<PathNode> range = new List<PathNode>();
+    bool IAEnd;
 
-    //public GameObject bulletAmmo;
     public GameObject m_TWall;
-
-    //public static int totalWalls = 3;
-
     public GameObject m_Bullet;
     int totalBullets = 3;
     bool shoot = false;
@@ -97,6 +93,7 @@ public class EnemyPathfinding : MonoBehaviour
 
         else if (thirdPathVectorList != null)
         {
+            Debug.Log("33333333333");
             Vector3 targetPosition = thirdPathVectorList[thirdPathIndex];
 
             if (Vector3.Distance(transform.position, targetPosition) > 1)
@@ -146,6 +143,8 @@ public class EnemyPathfinding : MonoBehaviour
 
         pathfinding.GetNode(x, y).SetIsIA(true);
         range = pathfinding.GetRangeList(pathfinding.GetNode(x, y));
+
+        IAEnd = true;
     }
 
     public Vector3 GetPosition()
@@ -636,6 +635,7 @@ public class EnemyPathfinding : MonoBehaviour
                         {
                             Debug.Log("Crea muro");
                             IACreatesWall(closestPlayer, nodoActual);
+                            IAEnd = true;
                         }
                     }
                 }
@@ -990,6 +990,7 @@ public class EnemyPathfinding : MonoBehaviour
                                 else //No hay balas en su propio rango
                                 {
                                     IACreatesWall(closestPlayerNotInRange, nodoActual); //Crea un muro entre IA y player
+                                    IAEnd = true;
                                 }
                             }
                         }
@@ -1072,6 +1073,7 @@ public class EnemyPathfinding : MonoBehaviour
                         else //No hay balas en su propio rango
                         {
                             IACreatesWall(closestPlayerNotInRange, nodoActual); //Crea un muro entre IA y player
+                            IAEnd = true;
                         }
                     }
                 }
@@ -1125,6 +1127,7 @@ public class EnemyPathfinding : MonoBehaviour
                     {
                         Debug.Log("No hay player, ni IA, ni balas ni muros cerca");
                         IACreatesWall(closestPlayerNotInRange, nodoActual); //Crea un muro entre él y el player
+                        IAEnd = true;
                     }
                 }
 
@@ -1138,11 +1141,12 @@ public class EnemyPathfinding : MonoBehaviour
                 {
                     Debug.Log("No hay player, ni IA, ni balas ni muros cerca");
                     IACreatesWall(closestPlayerNotInRange, nodoActual);
+                    IAEnd = true;
                 }
             }
         }
 
-        IAEnd = true;
+        
         Test.ammoReload++;
     }
 
@@ -1151,12 +1155,7 @@ public class EnemyPathfinding : MonoBehaviour
         IAEnd = false;
         Test.returnTurn = true;
         Test.isIATurn = false;
-        
-        if (Test.playerTurn == 1) 
-            Test.playerTurn = 2;
-
-        else if (Test.playerTurn == 2) 
-            Test.playerTurn = 1;
+        Test.IATurn = 2;
     }
 
     void IACreatesWall(PathNode closestPlayer, PathNode actualNode)
@@ -1236,6 +1235,17 @@ public class EnemyPathfinding : MonoBehaviour
                 Test.stringGrid.GetGridObject(neighbourNode.x, neighbourNode.y).AddLetter("FH");
             }
 
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("Ammo"))
+        {
+            totalBullets++;
+            pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
+            pathfinding.GetNode(x, y).SetIsAmmo(false);
+            Destroy(other.gameObject);
         }
     }
 }

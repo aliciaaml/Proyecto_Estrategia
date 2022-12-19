@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Enemy3Pathfinding : MonoBehaviour
 {
-    public float speed = 15f;
+    float speed = 15f;
     Pathfinding pathfinding;
     List<Vector3> pathVectorList;
     int currentPathIndex;
@@ -13,14 +13,10 @@ public class Enemy3Pathfinding : MonoBehaviour
     List<Vector3> thirdPathVectorList;
     int thirdPathIndex;
 
-    public List<PathNode> range = new List<PathNode>();
-    public bool IAEnd;
+    List<PathNode> range = new List<PathNode>();
+    bool IAEnd;
 
-    //public GameObject bulletAmmo;
     public GameObject m_TWall;
-
-    //public static int totalWalls = 3;
-
     public GameObject m_Bullet;
     int totalBullets = 3;
     bool shoot = false;
@@ -38,9 +34,9 @@ public class Enemy3Pathfinding : MonoBehaviour
 
     public void Update()
     {
-        if (Test.isIATurn && Test.IATurn == 1)
+        if (Test.isIATurn && Test.IATurn == 3)
         {
-            Debug.Log("Turno IA 1");
+            Debug.Log("Turno IA 3");
             pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
             TakeDecisions(pathfinding.GetNode(x, y));
             if (IAEnd) PassToPlayerTurn(); //Ha terminado con las decisiones, pasa a player
@@ -146,6 +142,8 @@ public class Enemy3Pathfinding : MonoBehaviour
 
         pathfinding.GetNode(x, y).SetIsIA(true);
         range = pathfinding.GetRangeList(pathfinding.GetNode(x, y));
+
+        IAEnd = true;
     }
 
     public Vector3 GetPosition()
@@ -636,6 +634,7 @@ public class Enemy3Pathfinding : MonoBehaviour
                         {
                             Debug.Log("Crea muro");
                             IACreatesWall(closestPlayer, nodoActual);
+                            IAEnd = true;
                         }
                     }
                 }
@@ -990,6 +989,7 @@ public class Enemy3Pathfinding : MonoBehaviour
                                 else //No hay balas en su propio rango
                                 {
                                     IACreatesWall(closestPlayerNotInRange, nodoActual); //Crea un muro entre IA y player
+                                    IAEnd = true;
                                 }
                             }
                         }
@@ -1072,6 +1072,7 @@ public class Enemy3Pathfinding : MonoBehaviour
                         else //No hay balas en su propio rango
                         {
                             IACreatesWall(closestPlayerNotInRange, nodoActual); //Crea un muro entre IA y player
+                            IAEnd = true;
                         }
                     }
                 }
@@ -1125,6 +1126,7 @@ public class Enemy3Pathfinding : MonoBehaviour
                     {
                         Debug.Log("No hay player, ni IA, ni balas ni muros cerca");
                         IACreatesWall(closestPlayerNotInRange, nodoActual); //Crea un muro entre él y el player
+                        IAEnd = true;
                     }
                 }
 
@@ -1138,11 +1140,12 @@ public class Enemy3Pathfinding : MonoBehaviour
                 {
                     Debug.Log("No hay player, ni IA, ni balas ni muros cerca");
                     IACreatesWall(closestPlayerNotInRange, nodoActual);
+                    IAEnd = true;
                 }
             }
         }
 
-        IAEnd = true;
+
         Test.ammoReload++;
     }
 
@@ -1151,12 +1154,7 @@ public class Enemy3Pathfinding : MonoBehaviour
         IAEnd = false;
         Test.returnTurn = true;
         Test.isIATurn = false;
-
-        if (Test.playerTurn == 1)
-            Test.playerTurn = 2;
-
-        else if (Test.playerTurn == 2)
-            Test.playerTurn = 1;
+        Test.IATurn = 1;
     }
 
     void IACreatesWall(PathNode closestPlayer, PathNode actualNode)

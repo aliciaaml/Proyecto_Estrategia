@@ -10,17 +10,21 @@ public class Enemy2Pathfinding : MonoBehaviour
     int currentPathIndex;
     List<Vector3> secondPathVectorList;
     int secondPathIndex;
+    List<Vector3> thirdPathVectorList;
+    int thirdPathIndex;
 
     public List<PathNode> range = new List<PathNode>();
     public bool IAEnd;
 
-    public GameObject bulletAmmo;
+    //public GameObject bulletAmmo;
     public GameObject m_TWall;
 
-    public static int totalWalls = 3;
+    //public static int totalWalls = 3;
 
     public GameObject m_Bullet;
     int totalBullets = 3;
+    bool shoot = false;
+    PathNode target = null;
 
 
     void Start()
@@ -90,6 +94,41 @@ public class Enemy2Pathfinding : MonoBehaviour
                 }
             }
         }
+
+        else if (thirdPathVectorList != null)
+        {
+            Vector3 targetPosition = thirdPathVectorList[thirdPathIndex];
+
+            if (Vector3.Distance(transform.position, targetPosition) > 1)
+            {
+                Vector3 moveDir = (targetPosition - transform.position).normalized;
+
+                transform.position = transform.position + moveDir * speed * Time.deltaTime;
+            }
+
+            else
+            {
+                thirdPathIndex++;
+
+                if (thirdPathIndex >= thirdPathVectorList.Count)
+                {
+                    thirdPathVectorList = null;
+                }
+            }
+        }
+
+        else if (shoot)
+        {
+            GameObject bulletInstance = Instantiate(m_Bullet, transform.position, Quaternion.identity) as GameObject;
+            Vector3 shootDir = (pathfinding.GetGrid().GetWorldPosition(target.x, target.y) - bulletInstance.transform.position).normalized;
+            bulletInstance.GetComponent<EnemyBullet>().SetUp(shootDir, target);
+            totalBullets -= 1;
+            Debug.Log("Quedan: " + totalBullets);
+
+            shoot = false;
+            target = null;
+        }
+
         else
         {
             StopMoving();
@@ -162,6 +201,41 @@ public class Enemy2Pathfinding : MonoBehaviour
         }
     }
 
+    public void SetThreeTargetsPosition(Vector3 targetPosition, Vector3 secondTargetPosition, Vector3 thirdTargetPosition)
+    {
+        currentPathIndex = 0;
+        secondPathIndex = 0;
+        thirdPathIndex = 0;
+
+        foreach (PathNode node in range)
+        {
+            pathfinding.GetNode(node.x, node.y).SetIsInRange(true);
+        }
+
+        pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
+        pathfinding.GetNode(x, y).SetIsIA(false);
+
+        pathVectorList = pathfinding.FindPath(GetPosition(), targetPosition);
+        secondPathVectorList = pathfinding.FindSecondPath(targetPosition, secondTargetPosition); //Ir del enemigo a muro
+        thirdPathVectorList = pathfinding.FindSecondPath(secondTargetPosition, thirdTargetPosition); //Ir del enemigo a muro despues de saltar
+
+
+        if (pathVectorList != null && pathVectorList.Count > 1)
+        {
+            pathVectorList.RemoveAt(0);
+        }
+
+        if (secondPathVectorList != null && secondPathVectorList.Count > 1)
+        {
+            secondPathVectorList.RemoveAt(0);
+        }
+
+        if (thirdPathVectorList != null && thirdPathVectorList.Count > 1)
+        {
+            thirdPathVectorList.RemoveAt(0);
+        }
+    }
+
     void TakeDecisions(PathNode nodoActual)
     {
 
@@ -174,9 +248,28 @@ public class Enemy2Pathfinding : MonoBehaviour
         float minDistIA = 10000;
         float minDistAmmo = 10000;
         float maxDistHiding = 0;
-        float minDistPlayerFromAmmo = 10000;
-        PathNode closestPlayerFromAmmo = null;
 
+        PathNode closestPlayerNotInRange = null;
+        PathNode closestHidingToPlayer = null;
+        float minDistPlayerNotInRange = 10000;
+        float minDistHiding = 10000;
+
+        //Busco el player más cercano
+        for (int x = 0; x < pathfinding.GetGrid().GetWidth(); x++)
+        {
+            for (int y = 0; y < pathfinding.GetGrid().GetHeigth(); y++)
+            {
+                if (pathfinding.GetNode(x, y).isPlayer)
+                {
+                    if (minDistPlayerNotInRange > Vector2.Distance(new Vector2(nodoActual.x, nodoActual.y), new Vector2(x, y)))
+                    {
+                        closestPlayerNotInRange = pathfinding.GetNode(x, y);
+                        minDistPlayerNotInRange = Vector2.Distance(new Vector2(nodoActual.x, nodoActual.y), new Vector2(x, y));
+
+                    }
+                }
+            }
+        }
 
         foreach (PathNode node in range) //Guardar jugador o IA más cercanos
         {
@@ -228,27 +321,18 @@ public class Enemy2Pathfinding : MonoBehaviour
                             maxDistHiding = Vector2.Distance(new Vector2(nodoActual.x, nodoActual.y), new Vector2(neighbourNode.x, neighbourNode.y));
                             farthestHiding = neighbourNode;
                         }
-                    }
-                }
-            }
 
-            if (closestAmmo != null) //Se encuentra jugador en rango de munición
-            {
-                List<PathNode> myAmmoRange = pathfinding.GetRangeList(pathfinding.GetNode(closestAmmo.x, closestAmmo.y));
-
-                foreach (PathNode myNode in myAmmoRange) //Guardar player en rango de munición
-                {
-                    if (pathfinding.GetNode(myNode.x, myNode.y).isPlayer) //Se encuentra player en rango de munición
-                    {
-                        if (minDistPlayerFromAmmo > Vector2.Distance(new Vector2(closestAmmo.x, closestAmmo.y), new Vector2(myNode.x, myNode.y)))
+                        if (minDistHiding > Vector2.Distance(new Vector2(closestPlayerNotInRange.x, closestPlayerNotInRange.y), new Vector2(neighbourNode.x, neighbourNode.y)))
                         {
-                            closestPlayerFromAmmo = myNode;
-                            minDistPlayerFromAmmo = Vector2.Distance(new Vector2(closestAmmo.x, closestAmmo.y), new Vector2(myNode.x, myNode.y));
+                            minDistHiding = Vector2.Distance(new Vector2(closestPlayerNotInRange.x, closestPlayerNotInRange.y), new Vector2(neighbourNode.x, neighbourNode.y));
+                            closestHidingToPlayer = neighbourNode;
                         }
                     }
                 }
             }
         }
+
+
 
         //////////////////////////////////////////////////////////////////////////////////////////////
         //INICIO DEL ALGORITMO
@@ -316,23 +400,8 @@ public class Enemy2Pathfinding : MonoBehaviour
                         SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y), pathfinding.GetGrid().GetWorldPosition(choosenHalfHiding.x, choosenHalfHiding.y));
 
                         //Disparar desde choosenHalfHiding
-
-                        pathfinding.GetGrid().GetXY(transform.position, out int x, out int y);
-
-                        if (pathfinding.GetNode(x, y).isHalfHiding)
-                        {
-
-                            Debug.Log("ajñsldfkjasdlfkjsdfkñjsdñflk");
-
-                            GameObject bulletInstance = Instantiate(m_Bullet, transform.position, Quaternion.identity) as GameObject;
-                            Vector3 shootDir = (pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y) - bulletInstance.transform.position).normalized;
-                            bulletInstance.GetComponent<Bullet>().SetUp(shootDir, pathfinding.GetNode(closestPlayer.x, closestPlayer.y));
-
-                            totalBullets -= 1;
-                            Debug.Log("Quedan: " + totalBullets);
-
-
-                        }
+                        shoot = true;
+                        target = closestPlayer;
                     }
 
                     else //O no tiene balas o vida closestPlayer < 20
@@ -369,9 +438,9 @@ public class Enemy2Pathfinding : MonoBehaviour
                     if (farthestHiding != null && totalBullets > 0) //En rango de IA hay cualquier Wall && IA tiene balas
                     {
                         Debug.Log("En rango de IA hay cualquier Wall && IA tiene balas");
-                        //Disparar (FALTA)
                         SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(farthestHiding.x, farthestHiding.y)); //Va al escondite más lejano
-
+                        shoot = true;
+                        target = closestPlayer;
                     }
 
                     else //No tiene muros cerca o no tiene balas
@@ -381,6 +450,8 @@ public class Enemy2Pathfinding : MonoBehaviour
                             Debug.Log("Hay balas en rango de closestPlayer");
                             SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y), pathfinding.GetGrid().GetWorldPosition(ammoPlayer.x, ammoPlayer.y));
                             //Y dispara
+                            shoot = true;
+                            target = closestPlayer;
                         }
 
                         else if (closestAmmo != null) //Hay balas en rango de IA
@@ -405,7 +476,9 @@ public class Enemy2Pathfinding : MonoBehaviour
                             {
                                 Debug.Log("Hay player en rango de balas");
                                 SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(closestAmmo.x, closestAmmo.y));
-                                //Y Dispara (FALTA)
+                                //Y Dispara
+                                shoot = true;
+                                target = playerNearAmmo;
                             }
 
                             else //No hay player en rango de balas
@@ -434,7 +507,6 @@ public class Enemy2Pathfinding : MonoBehaviour
                 PathNode choosenHalfHiding = null;
                 PathNode tallWall = null;
                 PathNode choosenFullHiding = null;
-                PathNode ammoPlayer = null;
                 Vector2 vectorNodoClosestPlayer = new Vector2(closestPlayer.x, closestPlayer.y);
 
 
@@ -448,11 +520,6 @@ public class Enemy2Pathfinding : MonoBehaviour
                     if (pathfinding.GetNode(node.x, node.y).isTWall)   //Hay muro alto
                     {
                         tallWall = node;
-                    }
-
-                    if (pathfinding.GetNode(node.x, node.y).isAmmo)   //Hay munición
-                    {
-                        ammoPlayer = node;
                     }
                 }
 
@@ -503,6 +570,8 @@ public class Enemy2Pathfinding : MonoBehaviour
                         Debug.Log("Tiene balas y vida closestPlayer > 20");
                         SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y), pathfinding.GetGrid().GetWorldPosition(choosenHalfHiding.x, choosenHalfHiding.y));
                         //Disparar desde choosenHalfHiding
+                        shoot = true;
+                        target = closestPlayer;
                     }
 
                     else //O no tiene balas o vida closestPlayer < 20
@@ -513,35 +582,59 @@ public class Enemy2Pathfinding : MonoBehaviour
                     }
                 }
 
-                else if (tallWall != null && totalBullets > 0) //Tiene muro alto en rango y balas
-                {
-                    //Dispara
-                    SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(choosenFullHiding.x, choosenFullHiding.y));
-                }
 
-                else if (smallWall != null && totalBullets > 0) //Tiene muro bajo en rango y balas
+                else //Si ataca al enemigo no tiene muros en los que esconderse despues
                 {
-                    //Dispara
-                    SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(choosenHalfHiding.x, choosenHalfHiding.y));
-                }
 
-                else
-                {
-                    if (closestAmmo != null) //Hay munición en rango
+                    if (farthestHiding != null && totalBullets > 0) //En rango de IA hay cualquier Wall && IA tiene balas
                     {
-                        if (closestAmmo != null && closestPlayerFromAmmo != null) //Hay munición en rango y en el rango del player hay munición
+                        Debug.Log("En rango de IA hay cualquier Wall && IA tiene balas");
+
+                        SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(farthestHiding.x, farthestHiding.y)); //Va al escondite más lejano
+                        shoot = true;
+                        target = closestPlayer;
+                    }
+
+                    else //No tiene muros cerca o no tiene balas
+                    {
+                        if (closestAmmo != null) //Hay balas en rango de IA
                         {
-                            SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(closestAmmo.x, closestAmmo.y));
-                            //Dispara
+                            List<PathNode> AmmoRange = pathfinding.GetRangeList(pathfinding.GetNode(closestAmmo.x, closestAmmo.y));
+                            PathNode playerNearAmmo = null;
+                            float minDistPlayerAmmo = 1000;
+
+                            foreach (PathNode node in AmmoRange) //Guardar player en rango de munición
+                            {
+                                if (pathfinding.GetNode(node.x, node.y).isPlayer) //Se encuentra player en rango de munición
+                                {
+                                    if (minDistPlayerAmmo > Vector2.Distance(new Vector2(closestAmmo.x, closestAmmo.y), new Vector2(node.x, node.y)))
+                                    {
+                                        playerNearAmmo = node;
+                                        minDistPlayerAmmo = Vector2.Distance(new Vector2(closestAmmo.x, closestAmmo.y), new Vector2(node.x, node.y));
+                                    }
+                                }
+                            }
+
+                            if (playerNearAmmo != null) //Hay player en rango de balas
+                            {
+                                Debug.Log("Hay player en rango de balas");
+                                SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(closestAmmo.x, closestAmmo.y));
+                                //Y Dispara
+                                shoot = true;
+                                target = playerNearAmmo;
+                            }
+
+                            else //No hay player en rango de balas
+                            {
+                                Debug.Log("No hay player en rango de balas");
+                                SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(closestAmmo.x, closestAmmo.y));
+                            }
+
                         }
 
-                        else if (closestAmmo != null) //Hay munición en rango
+                        else //Imposible llegar a balas
                         {
-                            SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(closestAmmo.x, closestAmmo.y));
-                        }
-
-                        else
-                        {
+                            Debug.Log("Crea muro");
                             IACreatesWall(closestPlayer, nodoActual);
                         }
                     }
@@ -559,26 +652,14 @@ public class Enemy2Pathfinding : MonoBehaviour
 
                 List<PathNode> IARange = pathfinding.GetRangeList(pathfinding.GetNode(closestIA.x, closestIA.y)); //Obtener rango de IA amiga
 
-                PathNode smallWall = null;
-                PathNode choosenHalfHiding = null;
-                PathNode tallWall = null;
-                PathNode choosenFullHiding = null;
                 PathNode ammoNearIA = null;
+                PathNode farthestHidingIA = null;
+                float maxDistHidingIA = 0;
                 PathNode closestPlayerToAttack = null;
-                PathNode playerNearAmmo = null;
-                float minDistPlayerAmmo = 10000;
+
 
                 foreach (PathNode node in IARange)
                 {
-                    if (pathfinding.GetNode(node.x, node.y).isSWall)   //Hay muro bajo
-                    {
-                        smallWall = node;
-                    }
-
-                    if (pathfinding.GetNode(node.x, node.y).isTWall)   //Hay muro alto
-                    {
-                        tallWall = node;
-                    }
 
                     if (pathfinding.GetNode(node.x, node.y).isAmmo)   //Hay munición
                     {
@@ -589,21 +670,19 @@ public class Enemy2Pathfinding : MonoBehaviour
                     {
                         closestPlayerToAttack = node;
                     }
-                }
 
-                if (ammoNearIA != null) //Hay balas en el rango de closestIA
-                {
-                    //Encontrar jugador en rango de balas
-                    List<PathNode> AmmoRange = pathfinding.GetRangeList(pathfinding.GetNode(ammoNearIA.x, ammoNearIA.y));
-
-                    foreach (PathNode node in AmmoRange) //Guardar player en rango de munición
+                    if (pathfinding.GetNode(node.x, node.y).isTWall || pathfinding.GetNode(node.x, node.y).isSWall) //Se encuentra escondite
                     {
-                        if (pathfinding.GetNode(node.x, node.y).isPlayer) //Se encuentra player en rango de munición
+                        List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(node.x, node.y));
+                        foreach (PathNode neighbourNode in neighbours)
                         {
-                            if (minDistPlayerAmmo > Vector2.Distance(new Vector2(ammoNearIA.x, ammoNearIA.y), new Vector2(node.x, node.y)))
+                            if (IARange.Contains(neighbourNode))
                             {
-                                playerNearAmmo = node;
-                                minDistPlayerAmmo = Vector2.Distance(new Vector2(ammoNearIA.x, ammoNearIA.y), new Vector2(node.x, node.y));
+                                if (maxDistHidingIA < Vector2.Distance(new Vector2(closestIA.x, closestIA.y), new Vector2(neighbourNode.x, neighbourNode.y)))
+                                {
+                                    maxDistHidingIA = Vector2.Distance(new Vector2(closestIA.x, closestIA.y), new Vector2(neighbourNode.x, neighbourNode.y));
+                                    farthestHidingIA = neighbourNode;
+                                }
                             }
                         }
                     }
@@ -619,7 +698,12 @@ public class Enemy2Pathfinding : MonoBehaviour
                     PathNode ammoNearPlayer = null;
                     Vector2 vectorNodoClosestPlayer = new Vector2(closestPlayerToAttack.x, closestPlayerToAttack.y);
 
-                    foreach (PathNode node in IARange)
+                    PathNode farthestNode = null;
+                    float maxDistfarthestNode = 0;
+
+
+
+                    foreach (PathNode node in IAPlayerRange)
                     {
                         if (pathfinding.GetNode(node.x, node.y).isSWall)   //Hay muro bajo
                         {
@@ -635,96 +719,123 @@ public class Enemy2Pathfinding : MonoBehaviour
                         {
                             ammoNearPlayer = node;
                         }
-                    }
 
-                    if (smallWallPlayer != null)
-                    {
-                        //Coge choosenHalfHiding más lejano a player de ese smallWall
-                        float maxDist = 0;
-                        List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(smallWallPlayer.x, smallWallPlayer.y));
-                        foreach (PathNode neighbourNode in neighbours)
+                        if (!pathfinding.GetNode(node.x, node.y).isPlayer && !pathfinding.GetNode(node.x, node.y).isIA && !pathfinding.GetNode(node.x, node.y).isTWall && !pathfinding.GetNode(node.x, node.y).isSWall)
                         {
-                            if (IAPlayerRange.Contains(neighbourNode))
+                            if (maxDistfarthestNode < Vector2.Distance(new Vector2(closestPlayerToAttack.x, closestPlayerToAttack.y), new Vector2(node.x, node.y)))
                             {
-                                if (maxDist < Vector2.Distance(vectorNodoClosestPlayer, new Vector2(neighbourNode.x, neighbourNode.y)))
-                                {
-                                    maxDist = Vector2.Distance(vectorNodoClosestPlayer, new Vector2(neighbourNode.x, neighbourNode.y));
-                                    choosenHalfHidingAfterJump = neighbourNode;
-                                }
+                                farthestNode = node;
+                                maxDistfarthestNode = Vector2.Distance(new Vector2(closestPlayerToAttack.x, closestPlayerToAttack.y), new Vector2(node.x, node.y));
                             }
                         }
+
+
                     }
 
-                    if (tallWallPlayer != null)
-                    {
-                        //Coge choosenFullHiding más lejano a player de ese tallWall
-                        float maxDist = 0;
-                        List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(tallWallPlayer.x, tallWallPlayer.y));
-                        foreach (PathNode neighbourNode in neighbours)
-                        {
-                            if (IAPlayerRange.Contains(neighbourNode))
-                            {
-                                if (maxDist < Vector2.Distance(vectorNodoClosestPlayer, new Vector2(neighbourNode.x, neighbourNode.y)))
-                                {
-                                    maxDist = Vector2.Distance(vectorNodoClosestPlayer, new Vector2(neighbourNode.x, neighbourNode.y));
-                                    choosenFullHidingAfterJump = neighbourNode;
-                                }
-                            }
-                        }
-                    }
 
                     if (EnemyHealth.currentHealth >= 50) //IA vida >= 50
                     {
-                        if (smallWallPlayer != null) //En rango de closestPlayer hay smallWall
+
+                        if (smallWallPlayer != null)
                         {
+                            //Coge choosenHalfHiding más lejano a player de ese smallWall
+                            float maxDist = 0;
+                            List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(smallWallPlayer.x, smallWallPlayer.y));
+                            foreach (PathNode neighbourNode in neighbours)
+                            {
+                                if (IAPlayerRange.Contains(neighbourNode))
+                                {
+                                    if (maxDist < Vector2.Distance(vectorNodoClosestPlayer, new Vector2(neighbourNode.x, neighbourNode.y)))
+                                    {
+                                        maxDist = Vector2.Distance(vectorNodoClosestPlayer, new Vector2(neighbourNode.x, neighbourNode.y));
+                                        choosenHalfHidingAfterJump = neighbourNode;
+                                    }
+                                }
+                            }
+
                             if (totalBullets > 0 && PlayerHealth.currentHealth > 20) //Tiene balas && vida del closestPlayer > 20 (Aquí mirar la del closestPlayer)
                             {
-                                //Salta y ataca
-                                SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y));
-                                //y se esconde en choosenHalfHidingAfterJump (hace 3 paths) (FALTA)
-                                //Y dispara (FALTA)
+                                //Salta, ataca, se esconde y dispara
+                                SetThreeTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y), pathfinding.GetGrid().GetWorldPosition(choosenHalfHidingAfterJump.x, choosenHalfHidingAfterJump.y));
+                                shoot = true;
+                                target = closestPlayerToAttack;
                             }
 
                             else
                             {
-                                //Salta y ataca
-                                SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y));
-                                //y se esconde en choosenHalfHidingAfterJump (hace 3 paths) (FALTA)
+                                //Salta, ataca y se esconde
+                                SetThreeTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y), pathfinding.GetGrid().GetWorldPosition(choosenHalfHidingAfterJump.x, choosenHalfHidingAfterJump.y));
                             }
+
+
                         }
 
                         else if (tallWallPlayer != null) //En rango de closestPlayer hay tallWall
                         {
-                            //Salta y ataca
-                            SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y));
-                            //y se esconde en choosenFullHidingAfterJump (hace 3 paths) (FALTA)
+                            //Coge choosenFullHiding más lejano a player de ese tallWall
+                            float maxDist = 0;
+                            List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(tallWallPlayer.x, tallWallPlayer.y));
+                            foreach (PathNode neighbourNode in neighbours)
+                            {
+                                if (IAPlayerRange.Contains(neighbourNode))
+                                {
+                                    if (maxDist < Vector2.Distance(vectorNodoClosestPlayer, new Vector2(neighbourNode.x, neighbourNode.y)))
+                                    {
+                                        maxDist = Vector2.Distance(vectorNodoClosestPlayer, new Vector2(neighbourNode.x, neighbourNode.y));
+                                        choosenFullHidingAfterJump = neighbourNode;
+                                    }
+                                }
+                            }
+
+                            //Salta, ataca y se esconde
+                            SetThreeTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y), pathfinding.GetGrid().GetWorldPosition(choosenFullHidingAfterJump.x, choosenFullHidingAfterJump.y));
+
                         }
 
                         else if (totalBullets > 0) //IA tiene balas
                         {
-                            //Salta y ataca
-                            SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y));
-                            //y se ALEJA EN DIRECCIÓN CONTRARIA 3 casillas (-vector2?) (hace 3 paths) (FALTA)
-                            //Y dispara (FALTA)
+                            //Salta, ataca, se aleja y dispara
+                            Debug.Log("asdfghjkl");
+                            SetThreeTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y), pathfinding.GetGrid().GetWorldPosition(farthestNode.x, farthestNode.y));
+                            shoot = true;
+                            target = closestPlayerToAttack;
                         }
 
                         else //No hay muros cerca del closestPlayer de la closestIA o no tiene munición
                         {
                             if (ammoNearPlayer != null) //Balas en rango de closestPlayer
                             {
-                                //Salta y ataca
-                                SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y));
-                                //y voy a las balas (FALTA)
-                                //y disparo (FALTA)
+                                //Salta, ataca, va a las balas y dispara
+                                SetThreeTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y), pathfinding.GetGrid().GetWorldPosition(ammoNearPlayer.x, ammoNearPlayer.y));
+                                shoot = true;
+                                target = closestPlayerToAttack;
                             }
 
                             else if (ammoNearIA != null) //balas en el rango de closestIA
                             {
+                                //Encontrar jugador en rango de balas
+                                List<PathNode> AmmoRange = pathfinding.GetRangeList(pathfinding.GetNode(ammoNearIA.x, ammoNearIA.y));
+                                PathNode playerNearAmmo = null;
+                                float minDistPlayerAmmo = 10000;
+
+                                foreach (PathNode node in AmmoRange) //Guardar player en rango de munición
+                                {
+                                    if (pathfinding.GetNode(node.x, node.y).isPlayer) //Se encuentra player en rango de munición
+                                    {
+                                        if (minDistPlayerAmmo > Vector2.Distance(new Vector2(ammoNearIA.x, ammoNearIA.y), new Vector2(node.x, node.y)))
+                                        {
+                                            playerNearAmmo = node;
+                                            minDistPlayerAmmo = Vector2.Distance(new Vector2(ammoNearIA.x, ammoNearIA.y), new Vector2(node.x, node.y));
+                                        }
+                                    }
+                                }
+
                                 if (playerNearAmmo != null) //Hay Player en rango de munición
                                 {
-                                    //Salta y va a las balas
+                                    //Salta, va a las balas y dispara
                                     SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(ammoNearIA.x, ammoNearIA.y));
-                                    //Y dispara (FALTA)                                                                                         
+                                    shoot = true;
+                                    target = playerNearAmmo;
                                 }
                                 else
                                 {
@@ -734,9 +845,9 @@ public class Enemy2Pathfinding : MonoBehaviour
                             }
                             else //No hay muros cerca del closestPlayer de la closestIA o no tiene munición y no hay balas en el rango de la closestIA
                             {
-                                //Salta y ataca
-                                SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y));
-                                //y se ALEJA EN DIRECCIÓN CONTRARIA 3 casillas (-vector2?) (hace 3 paths) (FALTA)
+                                //Salta, ataca y se aleja
+                                SetThreeTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y), pathfinding.GetGrid().GetWorldPosition(farthestNode.x, farthestNode.y));
+
                             }
                         }
                     }
@@ -744,44 +855,97 @@ public class Enemy2Pathfinding : MonoBehaviour
                     {
                         if (tallWallPlayer != null) //En rango de closestPlayer hay tallWall
                         {
-                            //Salta y ataca
-                            SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y));
-                            //y se esconde en choosenFullHidingAfterJump (hace 3 paths) (FALTA)
+                            //Coge choosenFullHiding más lejano a player de ese tallWall
+                            float maxDist = 0;
+                            List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(tallWallPlayer.x, tallWallPlayer.y));
+                            foreach (PathNode neighbourNode in neighbours)
+                            {
+                                if (IAPlayerRange.Contains(neighbourNode))
+                                {
+                                    if (maxDist < Vector2.Distance(vectorNodoClosestPlayer, new Vector2(neighbourNode.x, neighbourNode.y)))
+                                    {
+                                        maxDist = Vector2.Distance(vectorNodoClosestPlayer, new Vector2(neighbourNode.x, neighbourNode.y));
+                                        choosenFullHidingAfterJump = neighbourNode;
+                                    }
+                                }
+                            }
+
+                            //Salta, ataca y se esconde
+                            SetThreeTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y), pathfinding.GetGrid().GetWorldPosition(choosenFullHidingAfterJump.x, choosenFullHidingAfterJump.y));
+
                         }
+
                         else if (smallWallPlayer != null) //En rango de closestPlayer hay smallWall
                         {
+
+                            //Coge choosenHalfHiding más lejano a player de ese smallWall
+                            float maxDist = 0;
+                            List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(smallWallPlayer.x, smallWallPlayer.y));
+                            foreach (PathNode neighbourNode in neighbours)
+                            {
+                                if (IAPlayerRange.Contains(neighbourNode))
+                                {
+                                    if (maxDist < Vector2.Distance(vectorNodoClosestPlayer, new Vector2(neighbourNode.x, neighbourNode.y)))
+                                    {
+                                        maxDist = Vector2.Distance(vectorNodoClosestPlayer, new Vector2(neighbourNode.x, neighbourNode.y));
+                                        choosenHalfHidingAfterJump = neighbourNode;
+                                    }
+                                }
+                            }
+
                             if (totalBullets > 0 && PlayerHealth.currentHealth > 20) //Tiene balas && vida del closestPlayer > 20 (Aquí mirar la del closestPlayer)
                             {
-                                //Salta y ataca
-                                SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y));
-                                //y se esconde en choosenHalfHidingAfterJump (hace 3 paths) (FALTA)
-                                //y dispara (FALTA)
+                                //Salta, ataca, se esconde y dispara
+                                SetThreeTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y), pathfinding.GetGrid().GetWorldPosition(choosenHalfHidingAfterJump.x, choosenHalfHidingAfterJump.y));
+                                shoot = true;
+                                target = closestPlayerToAttack;
                             }
 
                             else
                             {
-                                //Salta y ataca
-                                SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y));
-                                //y se esconde en choosenHalfHidingAfterJump (hace 3 paths) (FALTA)
+                                //Salta, ataca y se esconde
+                                SetThreeTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y), pathfinding.GetGrid().GetWorldPosition(choosenHalfHidingAfterJump.x, choosenHalfHidingAfterJump.y));
+
                             }
 
                         }
+
                         else if (totalBullets > 0) //IA tiene balas
                         {
-                            //Salta y ataca
-                            SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y));
-                            //y se ALEJA EN DIRECCIÓN CONTRARIA 3 casillas (-vector2?) (hace 3 paths) (FALTA)
-                            //y dispara (FALTA)
+                            //Salta, ataca, se aleja y dispara
+                            SetThreeTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(closestPlayerToAttack.x, closestPlayerToAttack.y), pathfinding.GetGrid().GetWorldPosition(farthestNode.x, farthestNode.y));
+                            shoot = true;
+                            target = closestPlayerToAttack;
                         }
+
                         else //No hay muros en rango de player, poca vida y no tiene munición
                         {
+
                             if (ammoNearIA != null) //balas en el rango de closestIA
                             {
+                                //Encontrar jugador en rango de balas
+                                List<PathNode> AmmoRange = pathfinding.GetRangeList(pathfinding.GetNode(ammoNearIA.x, ammoNearIA.y));
+                                PathNode playerNearAmmo = null;
+                                float minDistPlayerAmmo = 10000;
+
+                                foreach (PathNode node in AmmoRange) //Guardar player en rango de munición
+                                {
+                                    if (pathfinding.GetNode(node.x, node.y).isPlayer) //Se encuentra player en rango de munición
+                                    {
+                                        if (minDistPlayerAmmo > Vector2.Distance(new Vector2(ammoNearIA.x, ammoNearIA.y), new Vector2(node.x, node.y)))
+                                        {
+                                            playerNearAmmo = node;
+                                            minDistPlayerAmmo = Vector2.Distance(new Vector2(ammoNearIA.x, ammoNearIA.y), new Vector2(node.x, node.y));
+                                        }
+                                    }
+                                }
+
                                 if (playerNearAmmo != null) //Hay Player en rango de munición
                                 {
-                                    //Salta y va a las balas
+                                    //Salta, va a las balas y dispara
                                     SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(ammoNearIA.x, ammoNearIA.y));
-                                    //Y dispara (FALTA)                                                                                         
+                                    shoot = true;
+                                    target = playerNearAmmo;
                                 }
                                 else
                                 {
@@ -789,14 +953,34 @@ public class Enemy2Pathfinding : MonoBehaviour
                                     SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(ammoNearIA.x, ammoNearIA.y));
                                 }
                             }
+
                             else //No hay muros cerca del closestPlayer de la closestIA o no tiene munición y no hay balas en el rango de la closestIA
                             {
                                 if (closestAmmo != null) //Hay balas en su propio rango
                                 {
-                                    if (closestPlayerFromAmmo != null) //En rango de balas hay player
+
+                                    List<PathNode> AmmoRange = pathfinding.GetRangeList(pathfinding.GetNode(closestAmmo.x, closestAmmo.y));
+                                    PathNode playerNearAmmo = null;
+                                    float minDistPlayerAmmo = 10000;
+
+                                    foreach (PathNode node in AmmoRange) //Guardar player en rango de munición
+                                    {
+                                        if (pathfinding.GetNode(node.x, node.y).isPlayer) //Se encuentra player en rango de munición
+                                        {
+                                            if (minDistPlayerAmmo > Vector2.Distance(new Vector2(closestAmmo.x, closestAmmo.y), new Vector2(node.x, node.y)))
+                                            {
+                                                playerNearAmmo = node;
+                                                minDistPlayerAmmo = Vector2.Distance(new Vector2(closestAmmo.x, closestAmmo.y), new Vector2(node.x, node.y));
+                                            }
+                                        }
+                                    }
+
+                                    if (playerNearAmmo != null) //En rango de balas hay player
                                     {
                                         SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(closestAmmo.x, closestAmmo.y)); //Va a las balas
-                                        //Disparar (FALTA)
+                                        //Disparar
+                                        shoot = true;
+                                        target = playerNearAmmo;
                                     }
                                     else
                                     {
@@ -805,7 +989,7 @@ public class Enemy2Pathfinding : MonoBehaviour
                                 }
                                 else //No hay balas en su propio rango
                                 {
-                                    IACreatesWall(closestPlayer, nodoActual); //Crea un muro entre IA y player
+                                    IACreatesWall(closestPlayerNotInRange, nodoActual); //Crea un muro entre IA y player
                                 }
                             }
                         }
@@ -813,13 +997,32 @@ public class Enemy2Pathfinding : MonoBehaviour
                 }
                 else //No hay player en rango de closestIA
                 {
-                    if (ammoNearIA != null) //Hay balas en rango de closestIA
+                    if (ammoNearIA != null) //balas en el rango de closestIA
                     {
+                        //Encontrar jugador en rango de balas
+                        List<PathNode> AmmoRange = pathfinding.GetRangeList(pathfinding.GetNode(ammoNearIA.x, ammoNearIA.y));
+                        PathNode playerNearAmmo = null;
+                        float minDistPlayerAmmo = 10000;
+
+                        foreach (PathNode node in AmmoRange) //Guardar player en rango de munición
+                        {
+                            if (pathfinding.GetNode(node.x, node.y).isPlayer) //Se encuentra player en rango de munición
+                            {
+                                if (minDistPlayerAmmo > Vector2.Distance(new Vector2(ammoNearIA.x, ammoNearIA.y), new Vector2(node.x, node.y)))
+                                {
+                                    playerNearAmmo = node;
+                                    minDistPlayerAmmo = Vector2.Distance(new Vector2(ammoNearIA.x, ammoNearIA.y), new Vector2(node.x, node.y));
+                                }
+                            }
+                        }
+
                         if (playerNearAmmo != null) //Hay Player en rango de munición
                         {
                             //Salta y va a las balas
                             SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(ammoNearIA.x, ammoNearIA.y));
-                            //Y dispara (FALTA)                                                                                         
+                            //Y dispara
+                            shoot = true;
+                            target = playerNearAmmo;
                         }
                         else
                         {
@@ -827,19 +1030,39 @@ public class Enemy2Pathfinding : MonoBehaviour
                             SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(ammoNearIA.x, ammoNearIA.y));
                         }
                     }
-                    else if (farthestHiding != null) //En rango de closestIA hay cualquier Wall
+
+                    else if (farthestHidingIA != null) //En rango de closestIA hay cualquier Wall
                     {
                         //Salta y va al escondite más lejano
-                        SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(farthestHiding.x, farthestHiding.y));
+                        SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestIA.x, closestIA.y), pathfinding.GetGrid().GetWorldPosition(farthestHidingIA.x, farthestHidingIA.y));
                     }
-                    else
+
+                    else //No hay muros cerca del closestPlayer de la closestIA o no tiene munición y no hay balas en el rango de la closestIA
                     {
                         if (closestAmmo != null) //Hay balas en su propio rango
                         {
-                            if (closestPlayerFromAmmo != null) //En rango de balas hay player
+
+                            List<PathNode> AmmoRange = pathfinding.GetRangeList(pathfinding.GetNode(closestAmmo.x, closestAmmo.y));
+                            PathNode playerNearAmmo = null;
+                            float minDistPlayerAmmo = 10000;
+
+                            foreach (PathNode node in AmmoRange) //Guardar player en rango de munición
+                            {
+                                if (pathfinding.GetNode(node.x, node.y).isPlayer) //Se encuentra player en rango de munición
+                                {
+                                    if (minDistPlayerAmmo > Vector2.Distance(new Vector2(closestAmmo.x, closestAmmo.y), new Vector2(node.x, node.y)))
+                                    {
+                                        playerNearAmmo = node;
+                                        minDistPlayerAmmo = Vector2.Distance(new Vector2(closestAmmo.x, closestAmmo.y), new Vector2(node.x, node.y));
+                                    }
+                                }
+                            }
+
+                            if (playerNearAmmo != null) //En rango de balas hay player
                             {
                                 SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(closestAmmo.x, closestAmmo.y)); //Va a las balas
-                                //Disparar (FALTA)
+                                shoot = true;
+                                target = playerNearAmmo;
                             }
                             else
                             {
@@ -848,7 +1071,7 @@ public class Enemy2Pathfinding : MonoBehaviour
                         }
                         else //No hay balas en su propio rango
                         {
-                            IACreatesWall(closestPlayerToAttack, nodoActual); //Crea un muro entre IA y player
+                            IACreatesWall(closestPlayerNotInRange, nodoActual); //Crea un muro entre IA y player
                         }
                     }
                 }
@@ -856,48 +1079,6 @@ public class Enemy2Pathfinding : MonoBehaviour
 
             else //No hay nadie en rango
             {
-                PathNode closestPlayerNotInRange = null;
-                PathNode closestHidingToPlayer = null;
-                float minDistPlayerNotInRange = 10000;
-                float minDistHiding = 10000;
-
-                //Busco el player más cercano
-                for (int x = 0; x < pathfinding.GetGrid().GetWidth(); x++)
-                {
-                    for (int y = 0; y < pathfinding.GetGrid().GetHeigth(); y++)
-                    {
-                        if (pathfinding.GetNode(x, y).isPlayer)
-                        {
-                            if (minDistPlayerNotInRange > Vector2.Distance(new Vector2(nodoActual.x, nodoActual.y), new Vector2(x, y)))
-                            {
-                                closestPlayerNotInRange = pathfinding.GetNode(x, y);
-                                minDistPlayerNotInRange = Vector2.Distance(new Vector2(nodoActual.x, nodoActual.y), new Vector2(x, y));
-                            }
-                        }
-                    }
-                }
-
-                //Busco el hidding mas cercano al player más cercano
-                foreach (PathNode node in range) //Guardar munición y escondites en rango
-                {
-                    if (pathfinding.GetNode(node.x, node.y).isTWall || pathfinding.GetNode(node.x, node.y).isSWall)
-                    {
-                        List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(node.x, node.y));
-                        foreach (PathNode neighbourNode in neighbours)
-                        {
-                            if (range.Contains(neighbourNode))
-                            {
-                                if (minDistHiding > Vector2.Distance(new Vector2(closestPlayerNotInRange.x, closestPlayerNotInRange.y), new Vector2(neighbourNode.x, neighbourNode.y)))
-                                {
-                                    minDistHiding = Vector2.Distance(new Vector2(closestPlayerNotInRange.x, closestPlayerNotInRange.y), new Vector2(neighbourNode.x, neighbourNode.y));
-                                    closestHidingToPlayer = neighbourNode;
-                                }
-                            }
-
-                        }
-                    }
-                }
-
                 if (totalBullets <= 1)
                 {
                     if (closestAmmo != null) //Hay munición en rango
@@ -923,7 +1104,8 @@ public class Enemy2Pathfinding : MonoBehaviour
                         {
                             Debug.Log("Hay Player en rango de munición");
                             SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(closestAmmo.x, closestAmmo.y)); //Va a las balas
-                            //Y dispara (FALTA)
+                            shoot = true;
+                            target = playerNearAmmo;
                         }
 
                         else //No hay Player en rango de munición
@@ -942,8 +1124,7 @@ public class Enemy2Pathfinding : MonoBehaviour
                     else //No hay player, ni IA, ni balas ni muros cerca
                     {
                         Debug.Log("No hay player, ni IA, ni balas ni muros cerca");
-                        IACreatesWall(closestPlayerNotInRange, nodoActual);
-                        //Crea un muro entre él y el player
+                        IACreatesWall(closestPlayerNotInRange, nodoActual); //Crea un muro entre él y el player
                     }
                 }
 
@@ -962,6 +1143,7 @@ public class Enemy2Pathfinding : MonoBehaviour
         }
 
         IAEnd = true;
+        Test.ammoReload++;
     }
 
     void PassToPlayerTurn()
@@ -979,6 +1161,8 @@ public class Enemy2Pathfinding : MonoBehaviour
 
     void IACreatesWall(PathNode closestPlayer, PathNode actualNode)
     {
+        //Que pasa si el player esta justo al lado?
+
         int x;
         int y;
 

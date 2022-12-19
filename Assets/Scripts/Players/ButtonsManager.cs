@@ -76,7 +76,7 @@ public class ButtonsManager : MonoBehaviour
                     if (characterPathfinding.range.Contains(pathfinding.GetNode(x, y))){
                         GameObject bulletInstance = Instantiate(m_Bullet, characterPathfinding.transform.position, Quaternion.identity) as GameObject;
                         Vector3 shootDir = (mouseWorldPosition - bulletInstance.transform.position).normalized;
-                        bulletInstance.GetComponent<Bullet>().SetUp(shootDir, pathfinding.GetNode(x, y)); 
+                        bulletInstance.GetComponent<PlayerBullet>().SetUp(shootDir, pathfinding.GetNode(x, y)); 
                         enabledShoot = false;
                         CharacterPathfinding.totalBullets--;
 
@@ -155,7 +155,7 @@ public class ButtonsManager : MonoBehaviour
                     {
                         GameObject bulletInstance = Instantiate(m_Bullet, character2Pathfinding.transform.position, Quaternion.identity) as GameObject;
                         Vector3 shootDir = (mouseWorldPosition - bulletInstance.transform.position).normalized;
-                        bulletInstance.GetComponent<Bullet>().SetUp(shootDir, pathfinding.GetNode(x, y));
+                        bulletInstance.GetComponent<PlayerBullet>().SetUp(shootDir, pathfinding.GetNode(x, y));
                         enabledShoot = false;
                         CharacterPathfinding.totalBullets--;
 

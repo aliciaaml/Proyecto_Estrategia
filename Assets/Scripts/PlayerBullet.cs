@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class PlayerBullet : MonoBehaviour
 {
     Pathfinding pathfinding;
     private Vector3 shootDir;
@@ -56,15 +56,9 @@ public class Bullet : MonoBehaviour
             damage = 10;
         }
 
-        if (collision.gameObject.tag == "Enemy" && (Test.playerTurn == 1 || Test.playerTurn == 2))
+        if (collision.gameObject.tag == "Enemy")
         {
             collision.gameObject.GetComponent<EnemyHealth>().TakeDamage(damage);
-            Destroy(gameObject);
-        }
-
-        if (collision.gameObject.tag == "Player" && Test.isIATurn)
-        {
-            collision.gameObject.GetComponent<PlayerHealth>().TakeDamage(damage);
             Destroy(gameObject);
         }
     }

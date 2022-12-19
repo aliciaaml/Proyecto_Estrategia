@@ -42,13 +42,11 @@ public class EnemyPathfinding : MonoBehaviour
             pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
             TakeDecisions(pathfinding.GetNode(x, y));
 
-            if(IAEnd) PassToPlayerTurn(); //Ha terminado con las decisiones, pasa a player
+            if (IAEnd) PassToPlayerTurn(); //Ha terminado con las decisiones, pasa a player
             
         }
 
         HandleMovement();
-        
-        
     }
 
     private void HandleMovement()
@@ -71,8 +69,6 @@ public class EnemyPathfinding : MonoBehaviour
                 if (currentPathIndex >= pathVectorList.Count)
                 {
                     pathVectorList = null;
-                    
-                    
                 }
             }
         }
@@ -125,7 +121,8 @@ public class EnemyPathfinding : MonoBehaviour
         else if (shoot)
         {
             GameObject bulletInstance = Instantiate(m_Bullet, transform.position, Quaternion.identity) as GameObject;
-            Vector3 shootDir = (pathfinding.GetGrid().GetWorldPosition(target.x, target.y) - bulletInstance.transform.position).normalized;
+            Vector3 shootDir = (pathfinding.GetGrid().GetWorldPosition(target.x, target.y + 1) - bulletInstance.transform.position).normalized;
+            Debug.Log(shootDir);
             bulletInstance.GetComponent<EnemyBullet>().SetUp(shootDir, target);
             totalBullets -= 1;
             Debug.Log("Quedan: " + totalBullets);
@@ -138,8 +135,6 @@ public class EnemyPathfinding : MonoBehaviour
         {
             StopMoving();
         }
-
-
     }
 
     private void StopMoving()
@@ -363,6 +358,7 @@ public class EnemyPathfinding : MonoBehaviour
                 }
 
             }
+
             if (playerGO == null)
             {
                 Debug.Log("null palyer");
@@ -1235,7 +1231,6 @@ public class EnemyPathfinding : MonoBehaviour
                 }
             }
         }
-
         
         Test.ammoReload++;
     }
@@ -1244,9 +1239,16 @@ public class EnemyPathfinding : MonoBehaviour
     {
         IAEnd = false;
         Test.isIATurn = false;
-        Test.IATurn = 2;
         Test.returnTurn = true;
-        
+
+        if (Test.enemy2.activeSelf)
+            Test.IATurn = 2;
+
+        else if (Test.enemy3.activeSelf)
+            Test.IATurn = 3;
+
+        else
+            Test.IATurn = 1;
     }
 
     void IACreatesWall(PathNode closestPlayer, PathNode actualNode)

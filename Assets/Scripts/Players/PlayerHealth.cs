@@ -18,7 +18,9 @@ public class PlayerHealth : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Enemy") && !Test.isIATurn)
+        {
             other.gameObject.GetComponent<EnemyHealth>().TakeDamage(20);
+        }
     }
 
     void Update()
@@ -29,6 +31,12 @@ public class PlayerHealth : MonoBehaviour
     public void TakeDamage(float damage)
     {
         currentHealth -= damage;
+        healthBar.setHealth(currentHealth);
+    }
+
+    public void AddHealth(float HP)
+    {
+        currentHealth += HP;
         healthBar.setHealth(currentHealth);
     }
 }

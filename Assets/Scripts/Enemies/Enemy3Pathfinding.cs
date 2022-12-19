@@ -119,7 +119,8 @@ public class Enemy3Pathfinding : MonoBehaviour
         else if (shoot)
         {
             GameObject bulletInstance = Instantiate(m_Bullet, transform.position, Quaternion.identity) as GameObject;
-            Vector3 shootDir = (pathfinding.GetGrid().GetWorldPosition(target.x, target.y) - bulletInstance.transform.position).normalized;
+            Vector3 shootDir = (pathfinding.GetGrid().GetWorldPosition(target.x, target.y + 1) - bulletInstance.transform.position).normalized;
+            Debug.Log(shootDir);
             bulletInstance.GetComponent<EnemyBullet>().SetUp(shootDir, target);
             totalBullets -= 1;
             Debug.Log("Quedan: " + totalBullets);
@@ -1236,7 +1237,17 @@ public class Enemy3Pathfinding : MonoBehaviour
         IAEnd = false;
         Test.returnTurn = true;
         Test.isIATurn = false;
-        Test.IATurn = 1;
+
+        Debug.Log(Test.enemy1.activeSelf);
+
+        if (Test.enemy1.activeSelf)
+            Test.IATurn = 1;
+
+        else if (Test.enemy2.activeSelf)
+            Test.IATurn = 2;
+
+        else
+            Test.IATurn = 3;
     }
 
     void IACreatesWall(PathNode closestPlayer, PathNode actualNode)

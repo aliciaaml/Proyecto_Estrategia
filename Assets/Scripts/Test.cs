@@ -12,6 +12,14 @@ public class Test : MonoBehaviour
     public static int playerTurn;
     public static bool returnTurn;
 
+    public GameObject Enemy1;
+    public GameObject Enemy2;
+    public GameObject Enemy3;
+
+    public static GameObject enemy1;
+    public static GameObject enemy2;
+    public static GameObject enemy3;
+
     public GameObject m_TWall;
     public GameObject m_SWall;
     public GameObject m_Ammo;
@@ -34,6 +42,10 @@ public class Test : MonoBehaviour
         isIATurn = false;
         IATurn = 1;
         playerTurn = 1;
+
+        enemy1 = Enemy1;
+        enemy2 = Enemy2;
+        enemy3 = Enemy3;
         
         tallWallList = new List<PathNode>();
         smallWallList = new List<PathNode>();
@@ -136,14 +148,65 @@ public class Test : MonoBehaviour
 
         else
         {
-            pathfinding.GetNode(6, 6).SetIsWalkeable(false);
-            pathfinding.GetNode(6, 6).SetIsTallWall(true);
-            pathfinding.GetNode(6, 6).SetIsFullHiding(false);
-            pathfinding.GetNode(6, 6).SetIsHalfHiding(false);
-            stringGrid.GetGridObject(6, 6).AddLetter("TW");
-            Vector3 post = pathfinding.GetGrid().GetWorldPosition(6, 6) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+            /*pathfinding.GetNode(3, 3).SetIsWalkeable(false);
+            pathfinding.GetNode(3, 3).SetIsTallWall(true);
+            pathfinding.GetNode(3, 3).SetIsFullHiding(false);
+            pathfinding.GetNode(3, 3).SetIsHalfHiding(false);
+            stringGrid.GetGridObject(3, 3).AddLetter("TW");
+            Vector3 post = pathfinding.GetGrid().GetWorldPosition(3, 3) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
             Instantiate(m_TWall, post, Quaternion.identity);
-            tallWallList.Add(pathfinding.GetNode(6, 6));
+            tallWallList.Add(pathfinding.GetNode(3, 3));*/
+
+            /*pathfinding.GetNode(3, 3).SetIsWalkeable(false);
+            pathfinding.GetNode(3, 3).SetIsSmallWall(true);
+            pathfinding.GetNode(3, 3).SetIsFullHiding(false);
+            pathfinding.GetNode(3, 3).SetIsHalfHiding(false);
+            stringGrid.GetGridObject(3, 3).AddLetter("SW");
+            Vector3 post = pathfinding.GetGrid().GetWorldPosition(3, 3) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+            Instantiate(m_SWall, post, Quaternion.identity);
+            smallWallList.Add(pathfinding.GetNode(3, 3));*/
+
+            Vector3 post = pathfinding.GetGrid().GetWorldPosition(8, 4) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+            pathfinding.GetNode(8, 4).SetIsAmmo(true);
+            Instantiate(m_Ammo, post, Quaternion.identity);
+
+            foreach (PathNode wall in tallWallList)
+            {
+                List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(wall.x, wall.y));
+                foreach (PathNode neighbourNode in neighbours)
+                {
+                    if (pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isTWall || pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isSWall)
+                    {
+                        pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(false);
+                        pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(false);
+                    }
+
+                    else
+                    {
+                        pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(true);
+                        stringGrid.GetGridObject(neighbourNode.x, neighbourNode.y).AddLetter("FH");
+                    }
+                }
+            }
+
+            foreach (PathNode wall in smallWallList)
+            {
+                List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(wall.x, wall.y));
+                foreach (PathNode neighbourNode in neighbours)
+                {
+                    if (pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isTWall || pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isSWall)
+                    {
+                        pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(false);
+                        pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(false);
+                    }
+
+                    else
+                    {
+                        pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(true);
+                        stringGrid.GetGridObject(neighbourNode.x, neighbourNode.y).AddLetter("HH");
+                    }
+                }
+            }
         }
 
         /*pathfinding.GetNode(3, 3).SetIsPlayer(true);
@@ -233,7 +296,6 @@ public class Test : MonoBehaviour
         if (isIATurn)
         {
             //Debug.Log("Turno de la IA");
-
            
             pathfinding.GetGrid().GetXY(IACharacter.transform.position, out int x, out int y);
 
@@ -277,132 +339,132 @@ public class Test : MonoBehaviour
 
 
         //Poner muros manualmente
-        //if (Input.GetMouseButtonDown(1))
-        //{
-        //    Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        //    pathfinding.GetGrid().GetXY(mouseWorldPosition, out int x, out int y);
+        if (Input.GetMouseButtonDown(1))
+        { 
+            Vector3 mouseWorldPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            pathfinding.GetGrid().GetXY(mouseWorldPosition, out int x, out int y);
             
-        //    pathfinding.GetNode(x, y).SetIsWalkeable(!pathfinding.GetNode(x, y).isWalkeable);
+            pathfinding.GetNode(x, y).SetIsWalkeable(!pathfinding.GetNode(x, y).isWalkeable);
 
-        //    if (!pathfinding.GetNode(x, y).isWalkeable)
-        //    {
-        //        var i = UnityEngine.Random.Range(0,2);
+            if (!pathfinding.GetNode(x, y).isWalkeable)
+            {
+                var i = UnityEngine.Random.Range(0,2);
 
-        //        if(i == 0)
-        //        {
+                if(i == 0)
+                {
                 
-        //            pathfinding.GetNode(x, y).SetIsTallWall(true);
-        //            pathfinding.GetNode(x, y).SetIsFullHiding(false);
-        //            pathfinding.GetNode(x, y).SetIsHalfHiding(false);
-        //            stringGrid.GetGridObject(x, y).AddLetter("TW");
-        //            Vector3 localPost = pathfinding.GetGrid().GetWorldPosition(x, y) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
-        //            GameObject tWallInstance = Instantiate(m_TWall, localPost, Quaternion.identity) as GameObject;
-        //            tallWallList.Add(pathfinding.GetNode(x, y));
+                    pathfinding.GetNode(x, y).SetIsTallWall(true);
+                    pathfinding.GetNode(x, y).SetIsFullHiding(false);
+                    pathfinding.GetNode(x, y).SetIsHalfHiding(false);
+                    stringGrid.GetGridObject(x, y).AddLetter("TW");
+                    Vector3 localPost = pathfinding.GetGrid().GetWorldPosition(x, y) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+                    GameObject tWallInstance = Instantiate(m_TWall, localPost, Quaternion.identity) as GameObject;
+                    tallWallList.Add(pathfinding.GetNode(x, y));
 
 
-        //        }
+                }
 
-        //        else
-        //        {
-        //            pathfinding.GetNode(x, y).SetIsSmallWall(true);
-        //            pathfinding.GetNode(x, y).SetIsFullHiding(false);
-        //            pathfinding.GetNode(x, y).SetIsHalfHiding(false);
-        //            stringGrid.GetGridObject(x, y).AddLetter("SW");
-        //            Vector3 localPost = pathfinding.GetGrid().GetWorldPosition(x, y) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
-        //            GameObject sWallInstance = Instantiate(m_SWall, localPost, Quaternion.identity) as GameObject;
-        //            smallWallList.Add(pathfinding.GetNode(x, y));
+                else
+                {
+                    pathfinding.GetNode(x, y).SetIsSmallWall(true);
+                    pathfinding.GetNode(x, y).SetIsFullHiding(false);
+                    pathfinding.GetNode(x, y).SetIsHalfHiding(false);
+                    stringGrid.GetGridObject(x, y).AddLetter("SW");
+                    Vector3 localPost = pathfinding.GetGrid().GetWorldPosition(x, y) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+                    GameObject sWallInstance = Instantiate(m_SWall, localPost, Quaternion.identity) as GameObject;
+                    smallWallList.Add(pathfinding.GetNode(x, y));
 
 
-        //        }
-        //    }
+                }
+            }
 
-        //    else
-        //    {
-        //        if (pathfinding.GetNode(x, y).isTWall)
-        //        {
-        //            stringGrid.GetGridObject(x, y).AddLetter("");
-        //            pathfinding.GetNode(x, y).SetIsTallWall(false);
-        //            tallWallList.Remove(pathfinding.GetNode(x, y));
+            else
+            {
+                if (pathfinding.GetNode(x, y).isTWall)
+                {
+                    stringGrid.GetGridObject(x, y).AddLetter("");
+                    pathfinding.GetNode(x, y).SetIsTallWall(false);
+                    tallWallList.Remove(pathfinding.GetNode(x, y));
 
-        //            List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(x, y));
-        //            foreach (PathNode neighbourNode in neighbours)
-        //            {
-        //                if (pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isTWall || pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isSWall)
-        //                {
-        //                    pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(false);
-        //                    pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(false);
-        //                }
+                    List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(x, y));
+                    foreach (PathNode neighbourNode in neighbours)
+                    {
+                        if (pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isTWall || pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isSWall)
+                        {
+                            pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(false);
+                            pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(false);
+                        }
 
-        //                else
-        //                {
-        //                    pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(false);
-        //                    stringGrid.GetGridObject(neighbourNode.x, neighbourNode.y).AddLetter("");
-        //                }
-        //            }
-        //        }
+                        else
+                        {
+                            pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(false);
+                            stringGrid.GetGridObject(neighbourNode.x, neighbourNode.y).AddLetter("");
+                        }
+                    }
+                }
 
-        //        else if (pathfinding.GetNode(x, y).isSWall)
-        //        {
-        //            stringGrid.GetGridObject(x, y).AddLetter("");
-        //            pathfinding.GetNode(x, y).SetIsSmallWall(false);
-        //            smallWallList.Remove(pathfinding.GetNode(x, y));
+                else if (pathfinding.GetNode(x, y).isSWall)
+                {
+                    stringGrid.GetGridObject(x, y).AddLetter("");
+                    pathfinding.GetNode(x, y).SetIsSmallWall(false);
+                    smallWallList.Remove(pathfinding.GetNode(x, y));
 
-        //            List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(x, y));
-        //            foreach (PathNode neighbourNode in neighbours)
-        //            {
-        //                if (pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isTWall || pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isSWall)
-        //                {
-        //                    pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(false);
-        //                    pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(false);
-        //                }
+                    List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(x, y));
+                    foreach (PathNode neighbourNode in neighbours)
+                    {
+                        if (pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isTWall || pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isSWall)
+                        {
+                            pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(false);
+                            pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(false);
+                        }
 
-        //                else
-        //                {
-        //                    pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(false);
-        //                    stringGrid.GetGridObject(neighbourNode.x, neighbourNode.y).AddLetter("");
-        //                }
-        //            }
-        //        }
-        //    }
+                        else
+                        {
+                            pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(false);
+                            stringGrid.GetGridObject(neighbourNode.x, neighbourNode.y).AddLetter("");
+                        }
+                    }
+                }
+            }
 
-        //    foreach (PathNode wall in tallWallList)
-        //    {
-        //        List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(wall.x, wall.y));
-        //        foreach (PathNode neighbourNode in neighbours)
-        //        {
-        //            if (pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isTWall || pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isSWall)
-        //            {
-        //                pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(false);
-        //                pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(false);
-        //            }
+            foreach (PathNode wall in tallWallList)
+            {
+                List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(wall.x, wall.y));
+                foreach (PathNode neighbourNode in neighbours)
+                {
+                    if (pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isTWall || pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isSWall)
+                    {
+                        pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(false);
+                        pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(false);
+                    }
 
-        //            else
-        //            {
-        //                pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(true);
-        //                stringGrid.GetGridObject(neighbourNode.x, neighbourNode.y).AddLetter("FH");
-        //            }
-        //        }
-        //    }
+                    else
+                    {
+                        pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(true);
+                        stringGrid.GetGridObject(neighbourNode.x, neighbourNode.y).AddLetter("FH");
+                    }
+                }
+            }
 
-        //    foreach (PathNode wall in smallWallList)
-        //    {
-        //        List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(wall.x, wall.y));
-        //        foreach (PathNode neighbourNode in neighbours)
-        //        {
-        //            if (pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isTWall || pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isSWall)
-        //            {
-        //                pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(false);
-        //                pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(false);
-        //            }
+            foreach (PathNode wall in smallWallList)
+            {
+                List<PathNode> neighbours = pathfinding.GetNeighbourList(pathfinding.GetNode(wall.x, wall.y));
+                foreach (PathNode neighbourNode in neighbours)
+                {
+                    if (pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isTWall || pathfinding.GetNode(neighbourNode.x, neighbourNode.y).isSWall)
+                    {
+                        pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsFullHiding(false);
+                        pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(false);
+                    }
 
-        //            else
-        //            {
-        //                pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(true);
-        //                stringGrid.GetGridObject(neighbourNode.x, neighbourNode.y).AddLetter("HH");
-        //            }
-        //        }
-        //    }
-        //}
+                    else
+                    {
+                        pathfinding.GetNode(neighbourNode.x, neighbourNode.y).SetIsHalfHiding(true);
+                        stringGrid.GetGridObject(neighbourNode.x, neighbourNode.y).AddLetter("HH");
+                    }
+                }
+            }
+        }
     }
 }
 

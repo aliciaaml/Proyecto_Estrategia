@@ -5,18 +5,19 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {
     public int maxHealth;
-    public static float currentHealth;
-    public HealthBar healthBar;
+    public float currentHealth;
+    HealthBar healthBar;
 
     void Start()
     {
+        healthBar = gameObject.GetComponentInChildren<HealthBar>();
         currentHealth = maxHealth;
         healthBar.setMaxHealth(maxHealth);
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Enemy") && (Test.playerTurn == 1 || Test.playerTurn == 2))
+        if (other.CompareTag("Enemy") && !Test.isIATurn)
             other.gameObject.GetComponent<EnemyHealth>().TakeDamage(20);
     }
 

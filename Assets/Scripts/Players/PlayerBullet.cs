@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyBullet : MonoBehaviour
+public class PlayerBullet : MonoBehaviour
 {
     Pathfinding pathfinding;
     private Vector3 shootDir;
@@ -27,25 +27,26 @@ public class EnemyBullet : MonoBehaviour
         if (n < 0) n += 360;
         transform.eulerAngles = new Vector3(0, 0, n);
         //////////////
+        Destroy(gameObject, 5f);
     }
 
-
+    
     void Update()
     {
         float moveSpeed = 100f;
         transform.position += shootDir * moveSpeed * Time.deltaTime;
-
-        pathfinding.GetGrid().GetXY(transform.position, out int x, out int y);
-        if (pathfinding.GetNode(x, y) == destinationNode)
-        {
-            Destroy(gameObject);
-        }
+        
+        //pathfinding.GetGrid().GetXY(transform.position + shootDir, out int x, out int y);
+        //if (pathfinding.GetNode(x, y) == destinationNode)
+        //{
+        //    Destroy(gameObject);
+        //}
     }
 
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-
+        
         if (collision.gameObject.tag == "TallWall")
         {
             Destroy(gameObject);
@@ -56,9 +57,9 @@ public class EnemyBullet : MonoBehaviour
             damage = 10;
         }
 
-        if (collision.gameObject.tag == "Player")
+        if (collision.gameObject.tag == "Enemy")
         {
-            collision.gameObject.GetComponent<PlayerHealth>().TakeDamage(damage);
+            collision.gameObject.GetComponent<EnemyHealth>().TakeDamage(damage);
             Destroy(gameObject);
         }
     }

@@ -504,7 +504,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 15
-  bulletAmmo: {fileID: 235092146634076742, guid: b1773469994dc284a8282e84b2920ebf, type: 3}
   totalWalls: 3
   totalBullets: 3
 --- !u!114 &2925641799249099989
@@ -520,4 +519,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
-  healthBar: {fileID: 81483670908696196}
+  currentHealth: 0

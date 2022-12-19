@@ -5,11 +5,12 @@ using UnityEngine;
 public class EnemyHealth : MonoBehaviour
 {
     public int maxHealth;
-    public static float currentHealth;
-    public HealthBar healthBar;
+    public float currentHealth;
+    HealthBar healthBar;
 
     void Start()
     {
+        healthBar = gameObject.GetComponentInChildren<HealthBar>();
         currentHealth = maxHealth;
         healthBar.setMaxHealth(maxHealth);
     }

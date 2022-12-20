@@ -20,6 +20,14 @@ public class Test : MonoBehaviour
     public static GameObject enemy2;
     public static GameObject enemy3;
 
+    public GameObject Player1;
+    public GameObject Player2;
+    public GameObject Player3;
+
+    public static GameObject player1;
+    public static GameObject player2;
+    public static GameObject player3;
+
     public GameObject m_TWall;
     public GameObject m_SWall;
     public GameObject m_Ammo;
@@ -46,7 +54,11 @@ public class Test : MonoBehaviour
         enemy1 = Enemy1;
         enemy2 = Enemy2;
         enemy3 = Enemy3;
-        
+
+        player1 = Player1;
+        player2 = Player2;
+        player3 = Player3;
+
         tallWallList = new List<PathNode>();
         smallWallList = new List<PathNode>();
 

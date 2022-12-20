@@ -158,6 +158,15 @@ public class Test : MonoBehaviour
             Instantiate(m_TWall, post1, Quaternion.identity);
             tallWallList.Add(pathfinding.GetNode(0, 5));
 
+            pathfinding.GetNode(2, 8).SetIsWalkeable(false);
+            pathfinding.GetNode(2, 8).SetIsTallWall(true);
+            pathfinding.GetNode(2, 8).SetIsFullHiding(false);
+            pathfinding.GetNode(2, 8).SetIsHalfHiding(false);
+            stringGrid.GetGridObject(2, 8).AddLetter("TW");
+            Vector3 post2 = pathfinding.GetGrid().GetWorldPosition(2, 8) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+            Instantiate(m_TWall, post2, Quaternion.identity);
+            tallWallList.Add(pathfinding.GetNode(2, 8));
+
             pathfinding.GetNode(3, 4).SetIsWalkeable(false);
             pathfinding.GetNode(3, 4).SetIsTallWall(true);
             pathfinding.GetNode(3, 4).SetIsFullHiding(false);
@@ -167,50 +176,41 @@ public class Test : MonoBehaviour
             Instantiate(m_TWall, post3, Quaternion.identity);
             tallWallList.Add(pathfinding.GetNode(3, 4));
 
-            pathfinding.GetNode(11, 9).SetIsWalkeable(false);
-            pathfinding.GetNode(11, 9).SetIsTallWall(true);
-            pathfinding.GetNode(11, 9).SetIsFullHiding(false);
-            pathfinding.GetNode(11, 9).SetIsHalfHiding(false);
-            stringGrid.GetGridObject(11, 9).AddLetter("TW");
-            Vector3 post4 = pathfinding.GetGrid().GetWorldPosition(11, 9) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+            pathfinding.GetNode(10, 8).SetIsWalkeable(false);
+            pathfinding.GetNode(10, 8).SetIsTallWall(true);
+            pathfinding.GetNode(10, 8).SetIsFullHiding(false);
+            pathfinding.GetNode(10, 8).SetIsHalfHiding(false);
+            stringGrid.GetGridObject(10, 8).AddLetter("TW");
+            Vector3 post4 = pathfinding.GetGrid().GetWorldPosition(10, 8) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
             Instantiate(m_TWall, post4, Quaternion.identity);
-            tallWallList.Add(pathfinding.GetNode(11, 9));
+            tallWallList.Add(pathfinding.GetNode(10, 8));
 
-            pathfinding.GetNode(8, 4).SetIsWalkeable(false);
-            pathfinding.GetNode(8, 4).SetIsTallWall(true);
-            pathfinding.GetNode(8, 4).SetIsFullHiding(false);
-            pathfinding.GetNode(8, 4).SetIsHalfHiding(false);
-            stringGrid.GetGridObject(8, 4).AddLetter("TW");
-            Vector3 post5 = pathfinding.GetGrid().GetWorldPosition(8, 4) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+            pathfinding.GetNode(5, 4).SetIsWalkeable(false);
+            pathfinding.GetNode(5, 4).SetIsTallWall(true);
+            pathfinding.GetNode(5, 4).SetIsFullHiding(false);
+            pathfinding.GetNode(5, 4).SetIsHalfHiding(false);
+            stringGrid.GetGridObject(5, 4).AddLetter("TW");
+            Vector3 post5 = pathfinding.GetGrid().GetWorldPosition(5, 4) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
             Instantiate(m_TWall, post5, Quaternion.identity);
-            tallWallList.Add(pathfinding.GetNode(8, 4));
+            tallWallList.Add(pathfinding.GetNode(5, 4));
 
-            pathfinding.GetNode(4, 8).SetIsWalkeable(false);
-            pathfinding.GetNode(4, 8).SetIsTallWall(true);
-            pathfinding.GetNode(4, 8).SetIsFullHiding(false);
-            pathfinding.GetNode(4, 8).SetIsHalfHiding(false);
-            stringGrid.GetGridObject(4, 8).AddLetter("TW");
-            Vector3 post6 = pathfinding.GetGrid().GetWorldPosition(4, 8) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+            pathfinding.GetNode(4, 3).SetIsWalkeable(false);
+            pathfinding.GetNode(4, 3).SetIsTallWall(true);
+            pathfinding.GetNode(4, 3).SetIsFullHiding(false);
+            pathfinding.GetNode(4, 3).SetIsHalfHiding(false);
+            stringGrid.GetGridObject(4, 3).AddLetter("TW");
+            Vector3 post6 = pathfinding.GetGrid().GetWorldPosition(4, 3) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
             Instantiate(m_TWall, post6, Quaternion.identity);
-            tallWallList.Add(pathfinding.GetNode(4, 8));
+            tallWallList.Add(pathfinding.GetNode(4, 3));
 
-            pathfinding.GetNode(3, 6).SetIsWalkeable(false);
-            pathfinding.GetNode(3, 6).SetIsTallWall(true);
-            pathfinding.GetNode(3, 6).SetIsFullHiding(false);
-            pathfinding.GetNode(3, 6).SetIsHalfHiding(false);
-            stringGrid.GetGridObject(3, 6).AddLetter("TW");
-            Vector3 post7 = pathfinding.GetGrid().GetWorldPosition(3, 6) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+            pathfinding.GetNode(11, 6).SetIsWalkeable(false);
+            pathfinding.GetNode(11, 6).SetIsTallWall(true);
+            pathfinding.GetNode(11, 6).SetIsFullHiding(false);
+            pathfinding.GetNode(11, 6).SetIsHalfHiding(false);
+            stringGrid.GetGridObject(11, 6).AddLetter("TW");
+            Vector3 post7 = pathfinding.GetGrid().GetWorldPosition(11, 6) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
             Instantiate(m_TWall, post7, Quaternion.identity);
-            tallWallList.Add(pathfinding.GetNode(3, 6));
-
-            //pathfinding.GetNode(6, 12).SetIsWalkeable(false);
-            //pathfinding.GetNode(6, 12).SetIsTallWall(true);
-            //pathfinding.GetNode(6, 12).SetIsFullHiding(false);
-            //pathfinding.GetNode(6, 12).SetIsHalfHiding(false);
-            //stringGrid.GetGridObject(6, 12).AddLetter("TW");
-            //Vector3 post8 = pathfinding.GetGrid().GetWorldPosition(6, 12) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
-            //Instantiate(m_TWall, post8, Quaternion.identity);
-            //tallWallList.Add(pathfinding.GetNode(6, 12));
+            tallWallList.Add(pathfinding.GetNode(11, 6));
 
             //Short Walls
 
@@ -219,9 +219,18 @@ public class Test : MonoBehaviour
             pathfinding.GetNode(0, 3).SetIsFullHiding(false);
             pathfinding.GetNode(0, 3).SetIsHalfHiding(false);
             stringGrid.GetGridObject(0, 3).AddLetter("SW");
-            Vector3 post9 = pathfinding.GetGrid().GetWorldPosition(0, 3) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
-            Instantiate(m_SWall, post9, Quaternion.identity);
+            Vector3 post8 = pathfinding.GetGrid().GetWorldPosition(0, 3) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+            Instantiate(m_SWall, post8, Quaternion.identity);
             smallWallList.Add(pathfinding.GetNode(0, 3));
+
+            pathfinding.GetNode(6, 3).SetIsWalkeable(false);
+            pathfinding.GetNode(6, 3).SetIsSmallWall(true);
+            pathfinding.GetNode(6, 3).SetIsFullHiding(false);
+            pathfinding.GetNode(6, 3).SetIsHalfHiding(false);
+            stringGrid.GetGridObject(6, 3).AddLetter("SW");
+            Vector3 post9 = pathfinding.GetGrid().GetWorldPosition(6, 3) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+            Instantiate(m_SWall, post9, Quaternion.identity);
+            smallWallList.Add(pathfinding.GetNode(6, 3));
 
             pathfinding.GetNode(3, 4).SetIsWalkeable(false);
             pathfinding.GetNode(3, 4).SetIsSmallWall(true);
@@ -232,18 +241,44 @@ public class Test : MonoBehaviour
             Instantiate(m_SWall, post10, Quaternion.identity);
             smallWallList.Add(pathfinding.GetNode(3, 4));
 
+            pathfinding.GetNode(7, 4).SetIsWalkeable(false);
+            pathfinding.GetNode(7, 4).SetIsSmallWall(true);
+            pathfinding.GetNode(7, 4).SetIsFullHiding(false);
+            pathfinding.GetNode(3, 4).SetIsHalfHiding(false);
+            stringGrid.GetGridObject(7, 4).AddLetter("SW");
+            Vector3 post11 = pathfinding.GetGrid().GetWorldPosition(7, 4) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+            Instantiate(m_SWall, post11, Quaternion.identity);
+            smallWallList.Add(pathfinding.GetNode(7, 4));
+
+            pathfinding.GetNode(6, 8).SetIsWalkeable(false);
+            pathfinding.GetNode(6, 8).SetIsSmallWall(true);
+            pathfinding.GetNode(6, 8).SetIsFullHiding(false);
+            pathfinding.GetNode(6, 8).SetIsHalfHiding(false);
+            stringGrid.GetGridObject(6, 8).AddLetter("SW");
+            Vector3 post12 = pathfinding.GetGrid().GetWorldPosition(6, 8) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+            Instantiate(m_SWall, post12, Quaternion.identity);
+            smallWallList.Add(pathfinding.GetNode(6, 8));
+
             //Ammo
-            Vector3 post_A1 = pathfinding.GetGrid().GetWorldPosition(2, 0) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
-            pathfinding.GetNode(2, 0).SetIsAmmo(true);
+            Vector3 post_A1 = pathfinding.GetGrid().GetWorldPosition(0, 4) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+            pathfinding.GetNode(0, 4).SetIsAmmo(true);
             Instantiate(m_Ammo, post_A1, Quaternion.identity);
 
-            Vector3 post_A2 = pathfinding.GetGrid().GetWorldPosition(3, 4) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
-            pathfinding.GetNode(3, 4).SetIsAmmo(true);
+            Vector3 post_A2 = pathfinding.GetGrid().GetWorldPosition(3, 5) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+            pathfinding.GetNode(3, 5).SetIsAmmo(true);
             Instantiate(m_Ammo, post_A2, Quaternion.identity);
 
             Vector3 post_A3 = pathfinding.GetGrid().GetWorldPosition(7, 7) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
             pathfinding.GetNode(7, 7).SetIsAmmo(true);
             Instantiate(m_Ammo, post_A3, Quaternion.identity);
+
+            Vector3 post_A4 = pathfinding.GetGrid().GetWorldPosition(6, 4) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+            pathfinding.GetNode(6, 4).SetIsAmmo(true);
+            Instantiate(m_Ammo, post_A4, Quaternion.identity);
+
+            Vector3 post_A5 = pathfinding.GetGrid().GetWorldPosition(8, 3) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+            pathfinding.GetNode(8, 3).SetIsAmmo(true);
+            Instantiate(m_Ammo, post_A5, Quaternion.identity);
 
             foreach (PathNode wall in tallWallList)
             {

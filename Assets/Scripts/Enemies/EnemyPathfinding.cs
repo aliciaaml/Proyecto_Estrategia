@@ -460,7 +460,7 @@ public class EnemyPathfinding : MonoBehaviour
                     {
                         Debug.Log("En rango de IA hay cualquier Wall && IA tiene balas");
                         GameObject bulletInstance = Instantiate(m_Bullet, transform.position, Quaternion.identity) as GameObject;
-                        Vector3 shootDir = (pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y) - bulletInstance.transform.position).normalized;
+                        Vector3 shootDir = (pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y+1) - bulletInstance.transform.position).normalized;
                         bulletInstance.GetComponent<EnemyBullet>().SetUp(shootDir, closestPlayer);
                         totalBullets -= 1;
                         Debug.Log("Quedan: " + totalBullets);
@@ -617,7 +617,7 @@ public class EnemyPathfinding : MonoBehaviour
                     {
                         Debug.Log("En rango de IA hay cualquier Wall && IA tiene balas");
                         GameObject bulletInstance = Instantiate(m_Bullet, transform.position, Quaternion.identity) as GameObject;
-                        Vector3 shootDir = (pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y) - bulletInstance.transform.position).normalized;
+                        Vector3 shootDir = (pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y+1) - bulletInstance.transform.position).normalized;
                         bulletInstance.GetComponent<EnemyBullet>().SetUp(shootDir, closestPlayer);
                         totalBullets -= 1;
                         Debug.Log("Quedan: " + totalBullets);

@@ -203,14 +203,14 @@ public class Test : MonoBehaviour
             Instantiate(m_TWall, post7, Quaternion.identity);
             tallWallList.Add(pathfinding.GetNode(3, 6));
 
-            pathfinding.GetNode(6, 12).SetIsWalkeable(false);
-            pathfinding.GetNode(6, 12).SetIsTallWall(true);
-            pathfinding.GetNode(6, 12).SetIsFullHiding(false);
-            pathfinding.GetNode(6, 12).SetIsHalfHiding(false);
-            stringGrid.GetGridObject(6, 12).AddLetter("TW");
-            Vector3 post8 = pathfinding.GetGrid().GetWorldPosition(6, 12) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
-            Instantiate(m_TWall, post8, Quaternion.identity);
-            tallWallList.Add(pathfinding.GetNode(6, 12));
+            //pathfinding.GetNode(6, 12).SetIsWalkeable(false);
+            //pathfinding.GetNode(6, 12).SetIsTallWall(true);
+            //pathfinding.GetNode(6, 12).SetIsFullHiding(false);
+            //pathfinding.GetNode(6, 12).SetIsHalfHiding(false);
+            //stringGrid.GetGridObject(6, 12).AddLetter("TW");
+            //Vector3 post8 = pathfinding.GetGrid().GetWorldPosition(6, 12) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
+            //Instantiate(m_TWall, post8, Quaternion.identity);
+            //tallWallList.Add(pathfinding.GetNode(6, 12));
 
             //Short Walls
 

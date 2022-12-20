@@ -22,10 +22,10 @@ public class EnemyBullet : MonoBehaviour
 
         //En caso de poner un sprite y querer cambiar su orientacion:
         //////////////
-        shootDir = shootDir.normalized;
-        float n = Mathf.Atan2(shootDir.y, shootDir.x) * Mathf.Rad2Deg;
-        if (n < 0) n += 360;
-        transform.eulerAngles = new Vector3(0, 0, n);
+        //shootDir = shootDir.normalized;
+        //float n = Mathf.Atan2(shootDir.y, shootDir.x) * Mathf.Rad2Deg;
+        //if (n < 0) n += 360;
+        //transform.eulerAngles = new Vector3(0, 0, n);
         //////////////
         Destroy(gameObject, 5f);
     }

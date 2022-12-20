@@ -22,10 +22,10 @@ public class PlayerBullet : MonoBehaviour
 
         //En caso de poner un sprite y querer cambiar su orientacion:
         //////////////
-        shootDir = shootDir.normalized;
-        float n = Mathf.Atan2(shootDir.y, shootDir.x) * Mathf.Rad2Deg;
-        if (n < 0) n += 360;
-        transform.eulerAngles = new Vector3(0, 0, n);
+        //shootDir = shootDir.normalized;
+        //float n = Mathf.Atan2(shootDir.y, shootDir.x) * Mathf.Rad2Deg;
+        //if (n < 0) n += 360;
+        //transform.eulerAngles = new Vector3(0, 0, n);
         //////////////
         Destroy(gameObject, 5f);
     }
@@ -35,7 +35,7 @@ public class PlayerBullet : MonoBehaviour
     {
         float moveSpeed = 100f;
         transform.position += shootDir * moveSpeed * Time.deltaTime;
-        
+
         //pathfinding.GetGrid().GetXY(transform.position + shootDir, out int x, out int y);
         //if (pathfinding.GetNode(x, y) == destinationNode)
         //{

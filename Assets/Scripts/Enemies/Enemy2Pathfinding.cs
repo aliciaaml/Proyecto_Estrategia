@@ -1250,7 +1250,6 @@ public class Enemy2Pathfinding : MonoBehaviour
             }
         }
 
-
         Test.ammoReload++;
     }
 

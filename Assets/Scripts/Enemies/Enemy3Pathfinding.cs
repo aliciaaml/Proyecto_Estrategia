@@ -1259,8 +1259,6 @@ public class Enemy3Pathfinding : MonoBehaviour
         Test.returnTurn = true;
         Test.isIATurn = false;
 
-        Debug.Log(Test.enemy1.activeSelf);
-
         if (Test.enemy1.activeSelf)
             Test.IATurn = 1;
 

@@ -360,15 +360,38 @@ public class ButtonsManager : MonoBehaviour
 
         Test.isIATurn = true;
 
-        if (Test.IATurn == 1)
+        //IA 1
+        if (Test.IATurn == 1 && Test.enemy1.activeSelf)
             EnemyPathfinding.IAStart = true;
 
-        else if (Test.IATurn == 2)
+        else if (Test.IATurn == 1 && Test.enemy2.activeSelf)
             Enemy2Pathfinding.IAStart = true;
 
-        else if (Test.IATurn == 3)
+        else if (Test.IATurn == 1 && Test.enemy3.activeSelf)
             Enemy3Pathfinding.IAStart = true;
 
+        //IA 2
+        else if (Test.IATurn == 2 && Test.enemy2.activeSelf)
+            Enemy2Pathfinding.IAStart = true;
+
+        else if (Test.IATurn == 2 && Test.enemy3.activeSelf)
+            Enemy3Pathfinding.IAStart = true;
+
+        else if (Test.IATurn == 2 && Test.enemy1.activeSelf)
+            EnemyPathfinding.IAStart = true;
+
+        //IA 3
+        else if (Test.IATurn == 3 && Test.enemy3.activeSelf)
+            Enemy3Pathfinding.IAStart = true;
+
+        else if (Test.IATurn == 3 && Test.enemy1.activeSelf)
+            EnemyPathfinding.IAStart = true;
+
+        else if (Test.IATurn == 3 && Test.enemy2.activeSelf)
+            Enemy2Pathfinding.IAStart = true;
+
+
+        //Players
         if (Test.playerTurn == 1)
             Test.playerTurn = 2;
 
@@ -377,7 +400,5 @@ public class ButtonsManager : MonoBehaviour
 
         else if (Test.playerTurn == 3)
             Test.playerTurn = 1;
-
-
     }
 }

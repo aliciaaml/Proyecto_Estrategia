@@ -36,11 +36,11 @@ public class PlayerBullet : MonoBehaviour
         float moveSpeed = 100f;
         transform.position += shootDir * moveSpeed * Time.deltaTime;
 
-        //pathfinding.GetGrid().GetXY(transform.position + shootDir, out int x, out int y);
-        //if (pathfinding.GetNode(x, y) == destinationNode)
-        //{
-        //    Destroy(gameObject);
-        //}
+        pathfinding.GetGrid().GetXY(transform.position + shootDir, out int x, out int y);
+        if (pathfinding.GetNode(x, y) == destinationNode && !pathfinding.GetNode(x, y).isIA)
+        {
+            Destroy(gameObject);
+        }
     }
 
 

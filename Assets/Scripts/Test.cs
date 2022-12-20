@@ -167,15 +167,6 @@ public class Test : MonoBehaviour
             Instantiate(m_TWall, post2, Quaternion.identity);
             tallWallList.Add(pathfinding.GetNode(2, 8));
 
-            pathfinding.GetNode(3, 4).SetIsWalkeable(false);
-            pathfinding.GetNode(3, 4).SetIsTallWall(true);
-            pathfinding.GetNode(3, 4).SetIsFullHiding(false);
-            pathfinding.GetNode(3, 4).SetIsHalfHiding(false);
-            stringGrid.GetGridObject(3, 4).AddLetter("TW");
-            Vector3 post3 = pathfinding.GetGrid().GetWorldPosition(3, 4) + new Vector3(pathfinding.GetGrid().GetCellSize(), pathfinding.GetGrid().GetCellSize()) * .5f;
-            Instantiate(m_TWall, post3, Quaternion.identity);
-            tallWallList.Add(pathfinding.GetNode(3, 4));
-
             pathfinding.GetNode(10, 8).SetIsWalkeable(false);
             pathfinding.GetNode(10, 8).SetIsTallWall(true);
             pathfinding.GetNode(10, 8).SetIsFullHiding(false);

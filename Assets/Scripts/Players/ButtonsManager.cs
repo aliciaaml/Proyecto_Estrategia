@@ -357,7 +357,17 @@ public class ButtonsManager : MonoBehaviour
         //else if (Test.IATurn == 2)
         //    Test.IATurn = 1;
 
+
         Test.isIATurn = true;
+
+        if (Test.IATurn == 1)
+            EnemyPathfinding.IAStart = true;
+
+        else if (Test.IATurn == 2)
+            Enemy2Pathfinding.IAStart = true;
+
+        else if (Test.IATurn == 3)
+            Enemy3Pathfinding.IAStart = true;
 
         if (Test.playerTurn == 1)
             Test.playerTurn = 2;
@@ -367,5 +377,7 @@ public class ButtonsManager : MonoBehaviour
 
         else if (Test.playerTurn == 3)
             Test.playerTurn = 1;
+
+
     }
 }

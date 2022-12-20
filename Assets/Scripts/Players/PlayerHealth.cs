@@ -33,10 +33,4 @@ public class PlayerHealth : MonoBehaviour
         currentHealth -= damage;
         healthBar.setHealth(currentHealth);
     }
-
-    public void AddHealth(float HP)
-    {
-        currentHealth += HP;
-        healthBar.setHealth(currentHealth);
-    }
 }

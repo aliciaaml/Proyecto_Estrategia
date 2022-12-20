@@ -14,6 +14,7 @@ public class Enemy2Pathfinding : MonoBehaviour
     int thirdPathIndex;
 
     List<PathNode> range = new List<PathNode>();
+    public static bool IAStart;
     bool IAEnd;
 
     public List<GameObject> players = new List<GameObject>();
@@ -32,18 +33,31 @@ public class Enemy2Pathfinding : MonoBehaviour
         pathfinding.GetNode(x, y).SetIsIA(true);
         range = pathfinding.GetRangeList(pathfinding.GetNode(x, y));
         IAEnd = false;
+        IAStart = false;
     }
 
     public void Update()
     {
-        if (Test.isIATurn && Test.IATurn == 2)
+        //if (Test.isIATurn && Test.IATurn == 1)
+        //{
+        //    Debug.Log("Turno IA 1");
+        //    pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
+        //    TakeDecisions(pathfinding.GetNode(x, y));
+
+        //    //if (IAEnd) PassToPlayerTurn(); //Ha terminado con las decisiones, pasa a player
+
+        //}
+
+        if (IAStart)
         {
             Debug.Log("Turno IA 2");
             pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
             TakeDecisions(pathfinding.GetNode(x, y));
-            if (IAEnd) PassToPlayerTurn(); //Ha terminado con las decisiones, pasa a player
+            IAStart = false;
+
         }
 
+        if (IAEnd) PassToPlayerTurn();
         HandleMovement();
     }
 
@@ -67,6 +81,11 @@ public class Enemy2Pathfinding : MonoBehaviour
                 if (currentPathIndex >= pathVectorList.Count)
                 {
                     pathVectorList = null;
+                    if (secondPathVectorList == null && thirdPathVectorList == null)
+                    {
+                        IAEnd = true;
+                        Debug.Log("IAEND 1");
+                    }
                 }
             }
         }
@@ -89,6 +108,11 @@ public class Enemy2Pathfinding : MonoBehaviour
                 if (secondPathIndex >= secondPathVectorList.Count)
                 {
                     secondPathVectorList = null;
+                    if (thirdPathVectorList == null)
+                    {
+                        IAEnd = true;
+                        Debug.Log("IAEND 2");
+                    }
                 }
             }
         }
@@ -112,6 +136,8 @@ public class Enemy2Pathfinding : MonoBehaviour
                 if (thirdPathIndex >= thirdPathVectorList.Count)
                 {
                     thirdPathVectorList = null;
+                    IAEnd = true;
+                    Debug.Log("IAEND 3");
                 }
             }
         }
@@ -147,7 +173,7 @@ public class Enemy2Pathfinding : MonoBehaviour
         pathfinding.GetNode(x, y).SetIsIA(true);
         range = pathfinding.GetRangeList(pathfinding.GetNode(x, y));
 
-        IAEnd = true;
+        //IAEnd = true;
     }
 
     public Vector3 GetPosition()
@@ -664,7 +690,6 @@ public class Enemy2Pathfinding : MonoBehaviour
                         {
                             Debug.Log("Imposible llegar a balas, Crea muro");
                             IACreatesWall(closestPlayer, nodoActual);
-                            IAEnd = true;
                         }
                     }
                 }
@@ -1063,7 +1088,6 @@ public class Enemy2Pathfinding : MonoBehaviour
                                 {
                                     Debug.Log("No hay balas en su propio rango");
                                     IACreatesWall(closestPlayerNotInRange, nodoActual); //Crea un muro entre IA y player
-                                    IAEnd = true;
                                 }
                             }
                         }
@@ -1154,7 +1178,6 @@ public class Enemy2Pathfinding : MonoBehaviour
                         {
                             Debug.Log("No hay balas en su propio rango");
                             IACreatesWall(closestPlayerNotInRange, nodoActual); //Crea un muro entre IA y player
-                            IAEnd = true;
                         }
                     }
                 }
@@ -1210,7 +1233,6 @@ public class Enemy2Pathfinding : MonoBehaviour
                     {
                         Debug.Log("No hay player, ni IA, ni balas ni muros cerca");
                         IACreatesWall(closestPlayerNotInRange, nodoActual); //Crea un muro entre él y el player
-                        IAEnd = true;
                     }
                 }
 
@@ -1224,7 +1246,6 @@ public class Enemy2Pathfinding : MonoBehaviour
                 {
                     Debug.Log("No hay player, ni IA, ni balas ni muros cerca");
                     IACreatesWall(closestPlayerNotInRange, nodoActual);
-                    IAEnd = true;
                 }
             }
         }
@@ -1327,6 +1348,8 @@ public class Enemy2Pathfinding : MonoBehaviour
             }
 
         }
+
+        PassToPlayerTurn();
     }
 
     private void OnTriggerEnter2D(Collider2D other)

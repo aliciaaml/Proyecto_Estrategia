@@ -7,6 +7,8 @@ TagManager:
   - Enemy
   - TallWall
   - SmallWall
+  - Ammo
+  - Bullet
   layers:
   - Default
   - TransparentFX

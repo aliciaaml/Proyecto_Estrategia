@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Bullet : MonoBehaviour
+public class EnemyBullet : MonoBehaviour
 {
     Pathfinding pathfinding;
     private Vector3 shootDir;
@@ -22,30 +22,31 @@ public class Bullet : MonoBehaviour
 
         //En caso de poner un sprite y querer cambiar su orientacion:
         //////////////
-        shootDir = shootDir.normalized;
-        float n = Mathf.Atan2(shootDir.y, shootDir.x) * Mathf.Rad2Deg;
-        if (n < 0) n += 360;
-        transform.eulerAngles = new Vector3(0, 0, n);
+        //shootDir = shootDir.normalized;
+        //float n = Mathf.Atan2(shootDir.y, shootDir.x) * Mathf.Rad2Deg;
+        //if (n < 0) n += 360;
+        //transform.eulerAngles = new Vector3(0, 0, n);
         //////////////
+        Destroy(gameObject, 5f);
     }
 
-    
+
     void Update()
     {
         float moveSpeed = 100f;
         transform.position += shootDir * moveSpeed * Time.deltaTime;
-        
-        pathfinding.GetGrid().GetXY(transform.position, out int x, out int y);
-        if (pathfinding.GetNode(x, y)== destinationNode)
-        {
-            Destroy(gameObject);
-        }
+
+        //pathfinding.GetGrid().GetXY(transform.position + shootDir, out int x, out int y);
+        //if (pathfinding.GetNode(x, y) == destinationNode)
+        //{
+        //    Destroy(gameObject);
+        //}
     }
 
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        
+
         if (collision.gameObject.tag == "TallWall")
         {
             Destroy(gameObject);
@@ -56,9 +57,9 @@ public class Bullet : MonoBehaviour
             damage = 10;
         }
 
-        if (collision.gameObject.tag == "Enemy")
+        if (collision.gameObject.tag == "Player")
         {
-            collision.gameObject.GetComponent<EnemyHealth>().TakeDamage(damage);
+            collision.gameObject.GetComponent<PlayerHealth>().TakeDamage(damage);
             Destroy(gameObject);
         }
     }

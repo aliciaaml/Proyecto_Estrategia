@@ -20,6 +20,7 @@ public class PathNode
     public bool isSWall;
     public bool isHalfHiding;
     public bool isFullHiding;
+    public bool isAmmo;
 
     public PathNode cameFromNode;
 
@@ -37,6 +38,7 @@ public class PathNode
         isSWall = false;
         isHalfHiding = false;
         isFullHiding = false;
+        isAmmo = false;
     }
 
     public void CalculateFCost()
@@ -93,6 +95,11 @@ public class PathNode
         grid.TriggerGridObjectChanged(x, y);
     }
 
+    public void SetIsAmmo(bool isAmmo)
+    {
+        this.isAmmo = isAmmo;
+        grid.TriggerGridObjectChanged(x, y);
+    }
 
     public override string ToString()
     {

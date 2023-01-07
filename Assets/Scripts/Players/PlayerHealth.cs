@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyHealth : MonoBehaviour
+public class PlayerHealth : MonoBehaviour
 {
     public int maxHealth;
     public float currentHealth;
@@ -17,9 +17,9 @@ public class EnemyHealth : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player") && Test.isIATurn)
+        if (other.CompareTag("Enemy") && !Test.isIATurn)
         {
-            other.gameObject.GetComponent<PlayerHealth>().TakeDamage(20);
+            other.gameObject.GetComponent<EnemyHealth>().TakeDamage(20);
         }
     }
 

@@ -2,15 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyHealth : MonoBehaviour
+public class Enemy2Health : MonoBehaviour
 {
     public int maxHealth;
-    public float currentHealth;
-    HealthBar healthBar;
+    public static float currentHealth;
+    public HealthBar healthBar;
 
     void Start()
     {
-        healthBar = gameObject.GetComponentInChildren<HealthBar>();
         currentHealth = maxHealth;
         healthBar.setMaxHealth(maxHealth);
     }
@@ -18,9 +17,7 @@ public class EnemyHealth : MonoBehaviour
     void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Player") && Test.isIATurn)
-        {
             other.gameObject.GetComponent<PlayerHealth>().TakeDamage(20);
-        }
     }
 
     void Update()

@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CharacterPathfinding : MonoBehaviour
+public class Character2Pathfinding : MonoBehaviour
 {
     public float speed = 15f;
     Pathfinding pathfinding;
     List<Vector3> pathVectorList;
     int currentPathIndex;
     public List<PathNode> range = new List<PathNode>();
+    public GameObject bulletAmmo;
 
     public int totalWalls = 3;
     public int totalBullets = 3;
@@ -36,6 +37,7 @@ public class CharacterPathfinding : MonoBehaviour
             {
                 Vector3 moveDir = (targetPosition - transform.position).normalized;
 
+                //float distanceBefore = Vector3.Distance(transform.position, targetPosition);
                 transform.position = transform.position + moveDir * speed * Time.deltaTime;
             }
 

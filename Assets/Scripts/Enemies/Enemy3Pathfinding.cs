@@ -1,8 +1,8 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyPathfinding : MonoBehaviour
+public class Enemy3Pathfinding : MonoBehaviour
 {
     float speed = 15f;
     Pathfinding pathfinding;
@@ -50,7 +50,7 @@ public class EnemyPathfinding : MonoBehaviour
 
         if (IAStart)
         {
-            Debug.Log("Turno IA 1");
+            Debug.Log("Turno IA 3");
             pathfinding.GetGrid().GetXY(GetPosition(), out int x, out int y);
             TakeDecisions(pathfinding.GetNode(x, y));
             IAStart = false;
@@ -86,7 +86,6 @@ public class EnemyPathfinding : MonoBehaviour
                         IAEnd = true;
                         Debug.Log("IAEND 1");
                     }
-                        
                 }
             }
         }
@@ -164,7 +163,6 @@ public class EnemyPathfinding : MonoBehaviour
 
     private void StopMoving()
     {
-
         foreach (PathNode node in range)
         {
             pathfinding.GetNode(node.x, node.y).SetIsInRange(false);
@@ -222,13 +220,11 @@ public class EnemyPathfinding : MonoBehaviour
 
         if (pathVectorList != null && pathVectorList.Count > 1)
         {
-            //Debug.Log("1 path not null");
             pathVectorList.RemoveAt(0);
         }
 
         if (secondPathVectorList != null && secondPathVectorList.Count > 1)
         {
-            //Debug.Log("2 path not null");
             secondPathVectorList.RemoveAt(0);
         }
     }
@@ -364,7 +360,7 @@ public class EnemyPathfinding : MonoBehaviour
             }
         }
 
-        
+
 
         //////////////////////////////////////////////////////////////////////////////////////////////
         //INICIO DEL ALGORITMO
@@ -383,9 +379,8 @@ public class EnemyPathfinding : MonoBehaviour
                 {
                     playerGO = player;
                 }
-
+                
             }
-
             if (playerGO == null)
             {
                 Debug.Log("null palyer");
@@ -401,7 +396,7 @@ public class EnemyPathfinding : MonoBehaviour
                 PathNode choosenFullHiding = null;
                 PathNode ammoPlayer = null;
                 Vector2 vectorNodoClosestPlayer = new Vector2(closestPlayer.x, closestPlayer.y);
-                
+
 
                 foreach (PathNode node in playerRange)
                 {
@@ -438,7 +433,7 @@ public class EnemyPathfinding : MonoBehaviour
                                 choosenHalfHiding = neighbourNode;
                             }
                         }
-                        
+
                     }
 
                     if (totalBullets > 0 && playerGO.GetComponent<PlayerHealth>().currentHealth > 20) //Tiene balas y vida closestPlayer > 20 (Aquí mirar la del closestPlayer)
@@ -482,7 +477,7 @@ public class EnemyPathfinding : MonoBehaviour
 
                 else //Si ataca al enemigo no tiene muros en los que esconderse despues
                 {
-                    
+
                     if (farthestHiding != null && totalBullets > 0) //En rango de IA hay cualquier Wall && IA tiene balas
                     {
                         Debug.Log("En rango de IA hay cualquier Wall && IA tiene balas");
@@ -493,7 +488,7 @@ public class EnemyPathfinding : MonoBehaviour
                         Debug.Log("Quedan: " + totalBullets);
 
                         SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(farthestHiding.x, farthestHiding.y)); //Va al escondite más lejano
-                        
+
                     }
 
                     else //No tiene muros cerca o no tiene balas
@@ -547,7 +542,7 @@ public class EnemyPathfinding : MonoBehaviour
                         {
                             Debug.Log("Imposible llegar a balas");
                             SetTwoTargetsPosition(pathfinding.GetGrid().GetWorldPosition(closestPlayer.x, closestPlayer.y), transform.position);
-                            
+
                         }
                     }
                 }
@@ -650,7 +645,7 @@ public class EnemyPathfinding : MonoBehaviour
                         Debug.Log("Quedan: " + totalBullets);
 
                         SetTargetPosition(pathfinding.GetGrid().GetWorldPosition(farthestHiding.x, farthestHiding.y)); //Va al escondite más lejano
-                        
+
                     }
 
                     else //No tiene muros cerca o no tiene balas
@@ -698,7 +693,7 @@ public class EnemyPathfinding : MonoBehaviour
                         }
                     }
                 }
-            }            
+            }
         }
 
         else //No hay Player en rango
@@ -708,14 +703,14 @@ public class EnemyPathfinding : MonoBehaviour
             if (closestIA != null) //Hay IA en rango        
             {
                 Debug.Log("Hay IA en rango");
-                
+
                 List<PathNode> IARange = pathfinding.GetRangeList(pathfinding.GetNode(closestIA.x, closestIA.y)); //Obtener rango de IA amiga
 
                 PathNode ammoNearIA = null;
                 PathNode farthestHidingIA = null;
                 float maxDistHidingIA = 0;
                 PathNode closestPlayerToAttack = null;
-                
+
 
                 foreach (PathNode node in IARange)
                 {
@@ -762,7 +757,7 @@ public class EnemyPathfinding : MonoBehaviour
                     PathNode farthestNode = null;
                     float maxDistfarthestNode = 0;
 
-                    
+
 
                     foreach (PathNode node in IAPlayerRange)
                     {
@@ -1253,24 +1248,25 @@ public class EnemyPathfinding : MonoBehaviour
                 }
             }
         }
-        
+
+
         Test.ammoReload++;
     }
 
     void PassToPlayerTurn()
     {
         IAEnd = false;
-        Test.isIATurn = false;
         Test.returnTurn = true;
+        Test.isIATurn = false;
 
-        if (Test.enemy2.activeSelf)
+        if (Test.enemy1.activeSelf)
+            Test.IATurn = 1;
+
+        else if (Test.enemy2.activeSelf)
             Test.IATurn = 2;
 
-        else if (Test.enemy3.activeSelf)
-            Test.IATurn = 3;
-
         else
-            Test.IATurn = 1;
+            Test.IATurn = 3;
     }
 
     void IACreatesWall(PathNode closestPlayer, PathNode actualNode)
